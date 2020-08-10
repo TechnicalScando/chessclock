@@ -19,7 +19,17 @@ const Chat = ({ location }) => {
     setRoom(room)
 
     // emits every time useEffect is called, sends a 'join' event and passes 'name' and 'room' as an object
-    socket.emit('join', { name, room })
+    // arrow function used for error handling
+    socket.emit('join', { name, room }, () => {
+
+    })
+
+    // return used for unmounting
+    return () => {
+      socket.emit('disconnect')
+
+      socket.off()
+    }
 
     // useEffect only called if array changes
   }, [ENDPOINT, location.search])
