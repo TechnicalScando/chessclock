@@ -7,6 +7,8 @@ let socket
 const Chat = ({ location }) => {
   const [name, setName] = useState('')
   const [room, setRoom] = useState('')
+  const [message, setMessage] = useState('')
+  const [messages, setMessages] = useState([])
   const ENDPOINT = 'localhost:5000'
 
   // called on render and every time list changes
@@ -18,7 +20,8 @@ const Chat = ({ location }) => {
     setName(name)
     setRoom(room)
 
-    // emits every time useEffect is called, sends a 'join' event and passes 'name' and 'room' as an object
+    // emits every time useEffect is called, sends a 'join' event
+    // and passes 'name' and 'room' as an object
     // arrow function used for error handling
     socket.emit('join', { name, room }, () => {
 
@@ -34,8 +37,18 @@ const Chat = ({ location }) => {
     // useEffect only called if array changes
   }, [ENDPOINT, location.search])
 
+  useEffect(() => {
+    socket.on('message', (message) => {
+      setMessages([...messages, message])
+    })
+  }, [messages])
+
   return (
-    <h1>Chat</h1>
+    <div className='outerContainer'>
+      <div className='container'>
+        <input value={message} onChange={(event) => setMessage(event.target.value)} />
+      </div>
+    </div>
   )
 }
 

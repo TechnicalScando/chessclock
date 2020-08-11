@@ -18,11 +18,28 @@ io.on('connection', (socket) => {
 
   // Accept 'join' event, additional callback function for error handling
   socket.on('join', ({ name, room }, callback) => {
+    // creat user on connection
     const { error, user } = addUser({ id: socket.id, name, room })
-
+    // if user is equal to error, run the error function
     if (error) return callback(error)
 
+    // send welcome message to use on room connect
+    socket.emit('message', { user: 'admin', text: `${user.name}, welcome to the room ${user.room}` })
+    // broadcast to other users that a new user has joined
+    socket.broadcast.to(user.room).emit('message', { user: 'admin', text: `${user.name}, has joined!` })
+
     socket.join(user.room)
+
+    callback()
+  })
+
+  // Recieve sendMessage even from front end and emit it to the user's room
+  socket.on('sendMessage', (message, callback) => {
+    const user = getUser(socket.id)
+
+    io.to(user.room).emit('message', { user: user.name, text: message })
+
+    callback()
   })
 
   // Accept and handle user disconnect
