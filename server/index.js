@@ -2,6 +2,8 @@ const express = require('express')
 const socketio = require('socket.io')
 const http = require('http')
 
+const { addUser, removeUser, getUser, getUsersInRoom } = require('./users.js')
+
 const PORT = process.env.PORT || 5000
 
 const router = require('./router')
@@ -16,7 +18,11 @@ io.on('connection', (socket) => {
 
   // Accept 'join' event, additional callback function for error handling
   socket.on('join', ({ name, room }, callback) => {
-    console.log(name, room)
+    const { error, user } = addUser({ id: socket.id, name, room })
+
+    if (error) return callback(error)
+
+    socket.join(user.room)
   })
 
   // Accept and handle user disconnect
