@@ -33,7 +33,7 @@ io.on('connection', (socket) => {
     callback()
   })
 
-  // Recieve sendMessage even from front end and emit it to the user's room
+  // Recieve sendMessage event from front end and emit it to the user's room
   socket.on('sendMessage', (message, callback) => {
     const user = getUser(socket.id)
 

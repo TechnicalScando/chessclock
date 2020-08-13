@@ -38,15 +38,32 @@ const Chat = ({ location }) => {
   }, [ENDPOINT, location.search])
 
   useEffect(() => {
+    // add message to array if message event is recieved
     socket.on('message', (message) => {
       setMessages([...messages, message])
     })
-  }, [messages])
+  }, [messages])// useEffect is called is messages array changes
+
+  const sendMessage = (event) => {
+    // prevent page from completely refreshing on message send
+    event.preventDefault()
+
+    // if there is a message emit a 'sendMessage' event then set input to empty string
+    if (message) {
+      socket.emit('sendMessage', message, () => setMessage(''))
+    }
+  }
+
+  console.log(message, messages)
 
   return (
     <div className='outerContainer'>
       <div className='container'>
-        <input value={message} onChange={(event) => setMessage(event.target.value)} />
+        <input
+          value={message}
+          onChange={(event) => setMessage(event.target.value)}
+          onKeyPress={event => event.key === 'Enter' ? sendMessage(event) : null}
+        />
       </div>
     </div>
   )
