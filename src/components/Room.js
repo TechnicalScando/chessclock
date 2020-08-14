@@ -1,5 +1,5 @@
 import React from 'react'
-import clipb from './clipb.png'
+const clipb = require('../Icons/clipb.png')
 // import { StyleSheet, css } from 'aphrodite'
 
 // const styles = StyleSheet.create({

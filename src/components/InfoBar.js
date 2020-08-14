@@ -1,15 +1,19 @@
 import React from 'react'
 
-const InfoBar = () => {
-  <div className='infoBar'>
-    <div className='leftInnerContainer'>
-      <img className='onLineIcon' src={onlineIcon} />
-      <h3>roomName</h3>
+import closedIcon from '../Icons/closeIcon.png'
+import onlineIcon from '../Icons/onlineIcon.png'
+
+const InfoBar = ({ room }) =>
+  (
+    <div>
+      <div>
+        <img src={onlineIcon} alt='' />
+        <h3>{room}</h3>
+      </div>
+      <div>
+        <a href='/'><img src={closedIcon} alt='' /></a>
+      </div>
     </div>
-    <div className='rightInnerContainer'>
-      <a>href=""</a>
-    </div>
-  </div>
-}
+  )
 
 export default InfoBar
