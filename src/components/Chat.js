@@ -59,11 +59,12 @@ const Chat = ({ location }) => {
   return (
     <div className='outerContainer'>
       <div className='container'>
-        <input
+        <InfoBar />
+        {/* <input
           value={message}
           onChange={(event) => setMessage(event.target.value)}
           onKeyPress={event => event.key === 'Enter' ? sendMessage(event) : null}
-        />
+        /> */}
       </div>
     </div>
   )
