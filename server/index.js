@@ -44,7 +44,11 @@ io.on('connection', (socket) => {
 
   // Accept and handle user disconnect
   socket.on('disconnect', () => {
-    console.log('User has left')
+    const user = removeUser(socket.id)
+
+    if (user) {
+      io.to(user.room).emit('message', { user: 'admin', text: `${user.name} has left` })
+    }
   })
 })
 
