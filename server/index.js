@@ -2,7 +2,7 @@ const express = require('express')
 const socketio = require('socket.io')
 const http = require('http')
 
-const { addUser, removeUser, getUser, getUsersInRoom } = require('./users.js')
+const { addUser, removeUser, getUser, getUsersInRoom, getUserInRoom } = require('./users.js')
 
 const PORT = process.env.PORT || 5000
 
@@ -30,6 +30,8 @@ io.on('connection', (socket) => {
 
     socket.join(user.room)
 
+    io.to(user.room).emit('roomData', { room: user.room, users: getUserInRoom(user.room) })
+
     callback()
   })
 
@@ -38,6 +40,7 @@ io.on('connection', (socket) => {
     const user = getUser(socket.id)
 
     io.to(user.room).emit('message', { user: user.name, text: message })
+    io.to(user.room).emit('roomData', { room: user.room, users: getUserInRoom(user.room) })
 
     callback()
   })
