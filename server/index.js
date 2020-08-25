@@ -32,6 +32,9 @@ io.on('connection', (socket) => {
 
     io.to(user.room).emit('roomData', { room: user.room, users: getUserInRoom(user.room) })
 
+    socket.emit('newUser', getUserInRoom(user.room))
+    console.log(getUserInRoom(user.room))
+
     callback()
   })
 

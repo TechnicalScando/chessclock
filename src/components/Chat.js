@@ -5,6 +5,7 @@ import io from 'socket.io-client'
 import InfoBar from './InfoBar'
 import Input from './Input'
 import Messages from './Messages'
+import TextContainer from './TextContainer'
 
 let socket
 
@@ -13,6 +14,7 @@ const Chat = ({ location }) => {
   const [room, setRoom] = useState('')
   const [message, setMessage] = useState('')
   const [messages, setMessages] = useState([])
+  const [users, setUsers] = useState([])
   const ENDPOINT = 'localhost:5000'
 
   // called on render and every time list changes
@@ -48,6 +50,14 @@ const Chat = ({ location }) => {
     })
   }, [messages])// useEffect is called is messages array changes
 
+  useEffect(() => {
+    socket.on('newUser', (users) => {
+      setUsers(users)
+    })
+  }, [users])
+
+  console.log(users)
+
   const sendMessage = (event) => {
     // prevent page from completely refreshing on message send
     event.preventDefault()
@@ -58,7 +68,7 @@ const Chat = ({ location }) => {
     }
   }
 
-  console.log(message, messages)
+  // console.log(message, messages)
 
   return (
     <div>
@@ -67,6 +77,7 @@ const Chat = ({ location }) => {
         <Messages messages={messages} name={name} />
         <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
       </div>
+      <TextContainer users={users} />
     </div>
   )
 }
