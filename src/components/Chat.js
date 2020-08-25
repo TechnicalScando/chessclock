@@ -46,15 +46,13 @@ const Chat = ({ location }) => {
   useEffect(() => {
     // add message to array if message event is recieved
     socket.on('message', (message) => {
-      setMessages([...messages, message])
-    })
-  }, [messages])// useEffect is called is messages array changes
+      setMessages(messages => [...messages, message])
 
-  useEffect(() => {
-    socket.on('newUser', (users) => {
-      setUsers(users)
+      socket.on('newUser', (users) => {
+        setUsers(users)
+      })
     })
-  }, [users])
+  }, [])// useEffect is called is messages array changes
 
   console.log(users)
 
