@@ -1,16 +1,14 @@
 import React from 'react'
 import { StyleSheet, css } from 'aphrodite'
 
-const PlayArea = () => (
+import Timer from './Timer'
+
+const PlayArea = ({ timer, startTimer, clearTimer }) => (
   <div className={css(styles.PlayAreaDiv)}>
-  (
-    <div>
-      <p>Play Area</p>
-      {/* <PlayerTimerArea />
-      <SwitchYieldButton />
-      <ReadyButton /> */}
-    </div>
-  )
+    <Timer timer={timer} />
+    <Timer timer={timer} />
+    <button onClick={startTimer}>Switch/Yield</button>
+    <button onClick={clearTimer}>Clear</button>
   </div>
 
 )
