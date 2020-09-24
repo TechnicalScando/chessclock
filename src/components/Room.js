@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-// import { StyleSheet, css } from 'aphrodite'
+import { StyleSheet, css } from 'aphrodite'
 
 import queryString from 'query-string'
 import io from 'socket.io-client'
@@ -11,54 +11,80 @@ import ChatBox from './ChatBox'
 import CreateNewRoom from './CreateNewRoom'
 
 let socket
-let timerStarted = false
 
-const Room = () => {
-  const [timer, setTimer] = useState('')
-
+const Room = ({ location }) => {
   const ENDPOINT = 'localhost:5000'
+  const DEFAULTTIMER = '00:00:00'
+
+  const [name, setName] = useState('')
+  const [room, setRoom] = useState('')
+  const [message, setMessage] = useState('')
+  const [timer, setTimer] = useState(DEFAULTTIMER)
+  const [url, setUrl] = useState('')
 
   useEffect(() => {
+    const { name, room } = queryString.parse(location.search)
+    setName(name)
+    setRoom(room)
+    setUrl(window.location.href)
+
     socket = io(ENDPOINT)
-    socket.emit('join')
-  }, [ENDPOINT])
+    socket.emit('join', { name, room })
+  }, [ENDPOINT, location.search])
 
   useEffect(() => {
     socket.on('timer', (data) => {
       setTimer(data.timer)
     })
   })
+
   const startTimer = () => {
-    if (!timerStarted) {
-      setTimer('00:00:00')
-      console.log('Timer has started on front end')
-      socket.emit('timerStart')
-      timerStarted = true
-    } else {
-      console.log('Timer is already started!')
-    }
+    console.log('Timer has started on front end')
+    socket.emit('timerStart')
   }
 
   const clearTimer = () => {
-    setTimer('')
-    console.log('Timer has been cleared')
-    timerStarted = false
+    console.log('Timer has been cleared on front end')
+    socket.emit('clearTimer')
+  }
+
+  const switchYield = () => {
+    console.log('Timer Yielded! TODO')
+    socket.emit('switchYield')
+  }
+
+  const sendMessage = (event) => {
+    event.preventDefault()
+    console.log(message)
+    socket.emit('sendMessage', message)
+    setMessage('')
   }
 
   return (
-    <div>
-      <Header />
+    <div className={css(styles.MainDiv)}>
+      <Header room={room} name={name} />
       <PlayArea
         timer={timer}
         startTimer={startTimer}
+        switchYield={switchYield}
         clearTimer={clearTimer}
       />
-      <CreateNewRoom />
-      <ChatBox />
+      <CreateNewRoom url={url} />
+      <ChatBox
+        sendMessage={sendMessage}
+        setMessage={setMessage}
+        message={message}
+      />
       <Footer />
     </div>
 
   )
 }
+
+const styles = StyleSheet.create({
+  MainDiv: {
+
+  }
+})
 
 export default Room

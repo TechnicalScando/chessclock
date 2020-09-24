@@ -10,19 +10,32 @@ const app = express()
 const server = http.createServer(app)
 const io = socketio(server)
 
-let countdown = 999
+const DEFAULTCOUNTDOWN = 999
+const DEFAULTTIMER = '00:00:00'
+
+let timerStarted = false
+let countdown = DEFAULTCOUNTDOWN
+let timerInterval
 
 const runTimer = (socket) => {
-  setInterval(() => {
-    countdown--
-    socket.emit('timer', { timer: countdown })
-  }, 1000)
+  if (!timerStarted) {
+    timerInterval = setInterval(() => {
+      countdown--
+      io.to('test').emit('timer', { timer: countdown })
+    }, 1000)
+
+    timerStarted = true
+    console.log('Timer has started on backend!')
+  } else {
+    console.log('Timer already started!')
+  }
 }
 
 // specific client instance of a socket
 io.on('connect', (socket) => {
-  socket.on('join', () => {
-    console.log('user has joined')
+  socket.on('join', (data) => {
+    console.log(`name:${data.name} has joined room:${data.room} `)
+    socket.join(data.room)
   })
 
   socket.on('disconnect', () => {
@@ -30,8 +43,18 @@ io.on('connect', (socket) => {
   })
 
   socket.on('timerStart', () => {
-    console.log('Timer has started on backend!')
     runTimer(socket)
+  })
+
+  socket.on('clearTimer', () => {
+    clearInterval(timerInterval)
+    timerStarted = false
+    countdown = DEFAULTCOUNTDOWN
+    io.to('test').emit('timer', { timer: DEFAULTTIMER })
+  })
+
+  socket.on('switchYield', () => {
+    console.log('Switch Yield!')
   })
 })
 

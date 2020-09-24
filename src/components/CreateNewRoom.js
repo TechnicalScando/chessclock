@@ -1,16 +1,17 @@
 import React from 'react'
 import { StyleSheet, css } from 'aphrodite'
 
-const CreateNewRoom = () => (
+const CreateNewRoom = ({ url }) => (
   <div className={css(styles.CreateNewRoomDiv)}>
-    <a href='document.location'> link text</a>
+    <a href='document.location'>{url}</a>
   </div>
 
 )
 
 const styles = StyleSheet.create({
   CreateNewRoomDiv: {
-    backgroundColor: '#0D88BC',
+    border: 1,
+    borderStyle: 'solid',
     width: 374,
     height: 98,
     top: 221,
