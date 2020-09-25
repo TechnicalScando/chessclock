@@ -1,9 +1,11 @@
 import React from 'react'
 import { StyleSheet, css } from 'aphrodite'
+import MessageBox from './MessageBox'
 
-const ChatBox = ({ sendMessage, setMessage, message }) => (
+const ChatBox = ({ sendMessage, setMessage, message, messages }) => (
 
   <div className={css(styles.chatBoxDiv)}>
+    <MessageBox messages={messages} />
     <div className={css(styles.InputSubmit)}>
       <input
         className={css(styles.ChatInput)}

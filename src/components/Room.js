@@ -18,6 +18,7 @@ const Room = ({ location }) => {
   const [name, setName] = useState('')
   const [room, setRoom] = useState('')
   const [message, setMessage] = useState('')
+  const [messages, setMessages] = useState([])
   const [timers, setTimers] = useState([])
   const [url, setUrl] = useState('')
   const [userCheck, setUserCheck] = useState(true)
@@ -46,7 +47,11 @@ const Room = ({ location }) => {
     socket.on('timer', (data) => {
       setTimers(data.timers)
     })
-  })
+
+    socket.on('message', message => {
+      setMessages(messages => [...messages, message])
+    })
+  }, [])
 
   const startTimer = () => {
     console.log('Timer has started on front end')
@@ -65,7 +70,7 @@ const Room = ({ location }) => {
 
   const sendMessage = (event) => {
     event.preventDefault()
-    console.log(message)
+
     socket.emit('sendMessage', message)
     setMessage('')
   }
@@ -85,6 +90,7 @@ const Room = ({ location }) => {
           sendMessage={sendMessage}
           setMessage={setMessage}
           message={message}
+          messages={messages}
         />
         <Footer />
       </div>

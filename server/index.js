@@ -62,11 +62,9 @@ io.on('connect', (socket) => {
     }
     if (error) return callback(error)
 
-    console.log(`name:${user.name} has joined room:${room} `)
-    console.log(getUserInRoom(user.room))
+    console.log(`name:${user.name} has joined room:${user.room} `)
 
     socket.join(user.room)
-
     callback()
   })
 
@@ -77,11 +75,6 @@ io.on('connect', (socket) => {
         io.to(user.room).emit('timers', timer)
       })
     }
-  })
-
-  socket.on('disconnect', () => {
-    const user = removeUser(socket.id)
-    console.log(`${user} has disconnected`)
   })
 
   socket.on('timerStart', () => {
@@ -104,6 +97,18 @@ io.on('connect', (socket) => {
     if (user !== undefined) {
       switchTimer(timerInterval, user)
     }
+  })
+
+  socket.on('sendMessage', (message) => {
+    const user = getUser(socket.id)
+    if (user !== undefined) {
+      io.to(user.room).emit('message', { user: user.name, text: message })
+    }
+  })
+
+  socket.on('disconnect', () => {
+    const user = removeUser(socket.id)
+    console.log(`${user} has disconnected`)
   })
 })
 
