@@ -14,13 +14,13 @@ let socket
 
 const Room = ({ location }) => {
   const ENDPOINT = 'localhost:5000'
-  const DEFAULTTIMER = '00:00:00'
 
   const [name, setName] = useState('')
   const [room, setRoom] = useState('')
   const [message, setMessage] = useState('')
-  const [timer, setTimer] = useState(DEFAULTTIMER)
+  const [timers, setTimers] = useState([])
   const [url, setUrl] = useState('')
+  const [userCheck, setUserCheck] = useState(true)
 
   useEffect(() => {
     const { name, room } = queryString.parse(location.search)
@@ -29,12 +29,22 @@ const Room = ({ location }) => {
     setUrl(window.location.href)
 
     socket = io(ENDPOINT)
-    socket.emit('join', { name, room })
-  }, [ENDPOINT, location.search])
+    socket.emit('join', { name, room }, (error) => {
+      if (error) {
+        setUserCheck(false)
+      }
+    })
+
+    socket.emit('timersRequest')
+
+    socket.on('timers', timer => {
+      setTimers(timers => [...timers, timer])
+    })
+  }, [ENDPOINT, location.search, setUserCheck])
 
   useEffect(() => {
     socket.on('timer', (data) => {
-      setTimer(data.timer)
+      setTimers(data.timers)
     })
   })
 
@@ -60,25 +70,33 @@ const Room = ({ location }) => {
     setMessage('')
   }
 
-  return (
-    <div className={css(styles.MainDiv)}>
-      <Header room={room} name={name} />
-      <PlayArea
-        timer={timer}
-        startTimer={startTimer}
-        switchYield={switchYield}
-        clearTimer={clearTimer}
-      />
-      <CreateNewRoom url={url} />
-      <ChatBox
-        sendMessage={sendMessage}
-        setMessage={setMessage}
-        message={message}
-      />
-      <Footer />
-    </div>
+  if (userCheck) {
+    return (
+      <div className={css(styles.MainDiv)}>
+        <Header room={room} name={name} />
+        <PlayArea
+          timers={timers}
+          startTimer={startTimer}
+          switchYield={switchYield}
+          clearTimer={clearTimer}
+        />
+        <CreateNewRoom url={url} />
+        <ChatBox
+          sendMessage={sendMessage}
+          setMessage={setMessage}
+          message={message}
+        />
+        <Footer />
+      </div>
 
-  )
+    )
+  } else {
+    return (
+      <div>
+        <p>uhoh username taken</p>
+      </div>
+    )
+  }
 }
 
 const styles = StyleSheet.create({
