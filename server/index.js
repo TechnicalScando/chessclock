@@ -2,7 +2,7 @@ const express = require('express')
 const socketio = require('socket.io')
 const http = require('http')
 
-const { addUser, removeUser, getUser, getUserInRoom } = require('./users')
+const { addUser, removeUser, getUser, getUsersInRoom } = require('./users')
 
 const PORT = process.env.PORT || 5000
 
@@ -57,24 +57,21 @@ const switchTimer = (timerInterval, user) => {
 io.on('connect', (socket) => {
   socket.on('join', ({ name, room }, callback) => {
     const { error, user } = addUser({ id: socket.id, name, room })
-    if (error) {
-      console.log(error)
-    }
+
     if (error) return callback(error)
 
-    console.log(`name:${user.name} has joined room:${user.room} `)
-
     socket.join(user.room)
-    callback()
-  })
 
-  socket.on('timersRequest', () => {
-    const user = getUser(socket.id)
-    if (user !== undefined) {
-      timers.forEach(timer => {
-        io.to(user.room).emit('timers', timer)
-      })
-    }
+    io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) })
+
+    socket.broadcast.emit('message', {
+      user: 'Admin',
+      text: `${user.name} has joined room: ${user.room} `
+    })
+
+    io.to(user.room).emit('timer', { timers: timers })
+
+    callback()
   })
 
   socket.on('timerStart', () => {

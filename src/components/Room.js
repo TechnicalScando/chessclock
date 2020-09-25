@@ -21,6 +21,7 @@ const Room = ({ location }) => {
   const [messages, setMessages] = useState([])
   const [timers, setTimers] = useState([])
   const [url, setUrl] = useState('')
+  const [users, setUsers] = useState([])
   const [userCheck, setUserCheck] = useState(true)
 
   useEffect(() => {
@@ -51,6 +52,10 @@ const Room = ({ location }) => {
     socket.on('message', message => {
       setMessages(messages => [...messages, message])
     })
+
+    socket.on('roomData', ({ users }) => {
+      setUsers(users)
+    })
   }, [])
 
   const startTimer = () => {
@@ -71,8 +76,10 @@ const Room = ({ location }) => {
   const sendMessage = (event) => {
     event.preventDefault()
 
-    socket.emit('sendMessage', message)
-    setMessage('')
+    if (message) {
+      socket.emit('sendMessage', message)
+      setMessage('')
+    }
   }
 
   if (userCheck) {
@@ -85,7 +92,10 @@ const Room = ({ location }) => {
           switchYield={switchYield}
           clearTimer={clearTimer}
         />
-        <CreateNewRoom url={url} />
+        <CreateNewRoom
+          url={url}
+          users={users}
+        />
         <ChatBox
           sendMessage={sendMessage}
           setMessage={setMessage}
