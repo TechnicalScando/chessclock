@@ -12,15 +12,26 @@ const app = express()
 const server = http.createServer(app)
 const io = socketio(server)
 
+// The current timer selected to run, based on array index
 let currentTimer = 0
+
+// Initializing the timer array with basic attributes
 let timers = [{ name: '', countdown: 0 }]
 
+// Test Timer array
+// TODO create dynamic timer array based on settings
 timers = [{ name: 'timer1', countdown: 1000 },
   { name: 'timer2', countdown: 1000 }]
 
+// A boolean which is set to true when the current timer is running
 let timerStarted = false
+
+// The timerInterval currently runninh
 let timerInterval
 
+// takes a timer and a user
+// Every second it deincrements the timers countdown attribute
+// then emits a timer event
 const runTimer = (timer, user) => {
   if (!timerStarted) {
     timerInterval = setInterval(() => {
@@ -30,10 +41,13 @@ const runTimer = (timer, user) => {
 
     timerStarted = true
   } else {
-
+    // TODO, handle when the timer is already started
   }
 }
 
+// Takes in the current Timer Interval, the current timer, and the current user
+// Stop the interval on the timer, sets timerstarted to false, then emits a timer event
+// Which sets the current timer back to default
 const clearTimer = (timerInterval, currentTimer, user) => {
   clearInterval(timerInterval)
   timerStarted = false
@@ -41,6 +55,10 @@ const clearTimer = (timerInterval, currentTimer, user) => {
   io.to(user.room).emit('timer', { timers: timers })
 }
 
+// Takes in the current timer interval and the current user
+// Clears the old timer, sets timerstarted to false,
+// Then sets the current timer to the other timer in the test array
+// TODO make this dynamic, working with any number of timers in the timers array
 const switchTimer = (timerInterval, user) => {
   clearInterval(timerInterval)
   timerStarted = false
@@ -53,27 +71,37 @@ const switchTimer = (timerInterval, user) => {
   runTimer(timers[currentTimer], user)
 }
 
-// specific client instance of a socket
+// specific client instance of a socket with a unique socket id
+// Runs on user connect
 io.on('connect', (socket) => {
   socket.on('join', ({ name, room }, callback) => {
+    // If a username isnt alredy taken in a room, add the user to the user list
+    // If the username is taken return an error
     const { error, user } = addUser({ id: socket.id, name, room })
 
+    // run the provided error callback function
     if (error) return callback(error)
 
+    // join the user to their room
     socket.join(user.room)
 
+    // Emit the data containing all users in the current users room
     io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) })
 
+    // Alert everyone but the current user of the new user entering the room
     socket.broadcast.emit('message', {
       user: 'Admin',
       text: `${user.name} has joined room: ${user.room} `
     })
 
+    // Emit the current timers to the new user
     io.to(user.room).emit('timer', { timers: timers })
 
     callback()
   })
 
+  // Recieve the timerStart event from the client
+  // begin running the currently selected timer
   socket.on('timerStart', () => {
     const user = getUser(socket.id)
     if (user !== undefined) {
@@ -81,6 +109,8 @@ io.on('connect', (socket) => {
     }
   })
 
+  // Recieve the clearTimer event from client
+  // Clear the currently selected timer
   socket.on('clearTimer', () => {
     const user = getUser(socket.id)
     if (user !== undefined) {
@@ -88,6 +118,8 @@ io.on('connect', (socket) => {
     }
   })
 
+  // Recieve switchYield from the client
+  // switch the currently selected timer
   socket.on('switchYield', () => {
     const user = getUser(socket.id)
     console.log('Switch Yield!')
@@ -96,6 +128,8 @@ io.on('connect', (socket) => {
     }
   })
 
+  // On recieveing sendMessage event from client
+  // Take the message and emit it as a message object with user data included
   socket.on('sendMessage', (message) => {
     const user = getUser(socket.id)
     if (user !== undefined) {
@@ -103,9 +137,11 @@ io.on('connect', (socket) => {
     }
   })
 
+  // Remove user from list upon disconnect event
+  // Alert room to user leaving
   socket.on('disconnect', () => {
     const user = removeUser(socket.id)
-    console.log(`${user} has disconnected`)
+    // TODO alert other users that use has left the room
   })
 })
 
