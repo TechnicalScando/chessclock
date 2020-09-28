@@ -7,6 +7,7 @@ const { addUser, removeUser, getUser, getUsersInRoom } = require('./users')
 const PORT = process.env.PORT || 5000
 
 const router = require('./router')
+const { count } = require('console')
 
 const app = express()
 const server = http.createServer(app)
@@ -16,7 +17,7 @@ const io = socketio(server)
 let currentTimer = 0
 
 // Initializing the timer array with basic attributes
-let timers = [{ name: '', countdown: 0 }]
+let timers = [{ name: '', countdown: 0, formattedCountdown: '' }]
 
 // Test Timer array
 // TODO create dynamic timer array based on settings
@@ -36,6 +37,8 @@ const runTimer = (timer, user) => {
   if (!timerStarted) {
     timerInterval = setInterval(() => {
       timer.countdown--
+      formatTimer(timer)
+      console.log(timer.formattedCountdown)
       io.to(user.room).emit('timer', { timers: timers })
     }, 1000)
 
@@ -45,6 +48,27 @@ const runTimer = (timer, user) => {
   }
 }
 
+const formatTimer = (timer) => {
+  const hours = ~~(timer.countdown / 3600)
+  const minutes = ~~((timer.countdown % 3600) / 60)
+  const seconds = ~~timer.countdown % 60
+
+  let finalFormat = ''
+  hours > 0
+    ? finalFormat += `${hours}:`
+    : finalFormat += ''
+
+  minutes < 10
+    ? finalFormat += `0${minutes}`
+    : finalFormat += `${minutes}`
+
+  seconds < 10
+    ? finalFormat += `:0${seconds}`
+    : finalFormat += `:${seconds}`
+
+  timer.formattedCountdown = finalFormat
+}
+
 // Takes in the current Timer Interval, the current timer, and the current user
 // Stop the interval on the timer, sets timerstarted to false, then emits a timer event
 // Which sets the current timer back to default
@@ -52,6 +76,7 @@ const clearTimer = (timerInterval, currentTimer, user) => {
   clearInterval(timerInterval)
   timerStarted = false
   timers[currentTimer] = { name: 'timer1', countdown: 1000 }
+  formatTimer(timers[currentTimer])
   io.to(user.room).emit('timer', { timers: timers })
 }
 
@@ -94,7 +119,16 @@ io.on('connect', (socket) => {
       text: `${user.name} has joined room: ${user.room} `
     })
 
+    // Welcome the current user to the room
+    io.to(user.id).emit('message', {
+      user: 'Admin',
+      text: `Welcome to room: ${user.room}, ${user.name}!`
+    })
+
     // Emit the current timers to the new user
+    timers.forEach(timer => {
+      formatTimer(timer)
+    })
     io.to(user.room).emit('timer', { timers: timers })
 
     callback()

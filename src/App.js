@@ -8,6 +8,7 @@ const App = () => (
   <Router>
     <Route path='/' exact component={Join} />
     <Route path='/room' exact component={Room} />
+    {/* <Route path='/room/:roomId?' exact component={Room} /> */}
   </Router>
 )
 

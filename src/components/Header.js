@@ -4,7 +4,6 @@ import { StyleSheet, css } from 'aphrodite'
 const Header = ({ name, room }) => (
   <div className={css(styles.headerDiv)}>
     <h1 className={css(styles.HeaderText)}>Ultimate Chess Clock</h1>
-    <h1 className={css(styles.InfoText)}>Hello {name}, Welcome to Room: {room}</h1>
   </div>
 )
 

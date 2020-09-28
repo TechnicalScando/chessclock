@@ -1,9 +1,9 @@
 import React from 'react'
 import { StyleSheet, css } from 'aphrodite'
 
-const CreateNewRoom = ({ url, users }) => (
+const CreateNewRoom = ({ users }) => (
   <div className={css(styles.CreateNewRoomDiv)}>
-    <a href='document.location'>{url}</a>
+    <a href='document.location'>{window.location.href}</a>
     <div className={css(styles.UserList)}>
       {users.map(({ name }) => <div key={name}>{name}</div>)}
     </div>

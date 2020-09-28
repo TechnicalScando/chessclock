@@ -3,14 +3,19 @@ import { StyleSheet, css } from 'aphrodite'
 
 import Timer from './Timer'
 
-const PlayArea = ({ timers, startTimer, clearTimer, switchYield }) => (
+const PlayArea = ({ timers, startTimer, clearTimer, switchYield, settingsToggle }) => (
   <div className={css(styles.PlayAreaDiv)}>
     <div className={css(styles.PlayerTimerArea)}>
-      {timers.map((timer, i) => <Timer key={i} timer={timer.countdown} />)}
+      {timers.map((timer, i) => <Timer key={i} timer={timer.formattedCountdown} />)}
     </div>
-    <button onClick={startTimer}>Start</button>
-    <button onClick={switchYield}>Switch/Yield</button>
-    <button onClick={clearTimer}>Clear</button>
+    <div className={css(styles.PlayButtons)}>
+      <button onClick={startTimer}>Start</button>
+      <button onClick={switchYield}>Switch/Yield</button>
+      <button onClick={clearTimer}>Clear</button>
+    </div>
+    <div className={css(styles.SettingsButtons)}>
+      <button onClick={settingsToggle}>Settings</button>
+    </div>
   </div>
 
 )
@@ -34,6 +39,14 @@ const styles = StyleSheet.create({
     top: 382,
     margin: 15,
     padding: 5
+  },
+
+  SettingsButtons: {
+    margin: 20
+  },
+
+  PlayButtons: {
+    margin: 20
   }
 })
 

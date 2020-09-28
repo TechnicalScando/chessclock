@@ -9,29 +9,24 @@ import Footer from './Footer'
 import PlayArea from './PlayArea'
 import ChatBox from './ChatBox'
 import CreateNewRoom from './CreateNewRoom'
+import Settings from './Settings'
 
 let socket
 
 const Room = ({ location }) => {
   const ENDPOINT = 'localhost:5000'
 
-  const [name, setName] = useState('')
-  const [room, setRoom] = useState('')
   const [message, setMessage] = useState('')
   const [messages, setMessages] = useState([])
   const [timers, setTimers] = useState([])
-  const [url, setUrl] = useState('')
   const [users, setUsers] = useState([])
   const [userCheck, setUserCheck] = useState(true)
+  const [showSettings, setShowSettings] = useState(false)
 
   // This useEffect run when the endpoint, location.search, or usercheck changes
   useEffect(() => {
     // Get name and room from url
     const { name, room } = queryString.parse(location.search)
-    setName(name)
-    setRoom(room)
-    // Get current url
-    setUrl(window.location.href)
 
     // create client side socket at current endpoint
     socket = io(ENDPOINT)
@@ -49,8 +44,8 @@ const Room = ({ location }) => {
   // Thos useEffect runs on any change
   useEffect(() => {
     // Recieve timer event and update timers state
-    socket.on('timer', (data) => {
-      setTimers(data.timers)
+    socket.on('timer', ({ timers }) => {
+      setTimers(timers)
     })
 
     // Recieve message event and update messages state
@@ -79,6 +74,10 @@ const Room = ({ location }) => {
     socket.emit('switchYield')
   }
 
+  const settingsToggle = () => {
+    setShowSettings(!showSettings)
+  }
+
   // Linked to input event in Chatbox
   // if there is a value a message is emmited to the server
   const sendMessage = (event) => {
@@ -95,15 +94,15 @@ const Room = ({ location }) => {
   if (userCheck) {
     return (
       <div className={css(styles.MainDiv)}>
-        <Header room={room} name={name} />
+        <Header />
         <PlayArea
           timers={timers}
           startTimer={startTimer}
           switchYield={switchYield}
           clearTimer={clearTimer}
+          settingsToggle={settingsToggle}
         />
         <CreateNewRoom
-          url={url}
           users={users}
         />
         <ChatBox
@@ -112,6 +111,9 @@ const Room = ({ location }) => {
           message={message}
           messages={messages}
         />
+        {showSettings
+          ? <Settings settingsToggle={settingsToggle} />
+          : null}
         <Footer />
       </div>
 
