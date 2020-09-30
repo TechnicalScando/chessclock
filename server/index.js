@@ -7,22 +7,19 @@ const { addUser, removeUser, getUser, getUsersInRoom } = require('./users')
 const PORT = process.env.PORT || 5000
 
 const router = require('./router')
-const { count } = require('console')
 
 const app = express()
 const server = http.createServer(app)
 const io = socketio(server)
 
+const DEFAULTSETTINGS = { timerCount: 2, timerCountdown: 1000 }
+let timerSettings = { timerCount: 2, timerCountdown: 1000 }
+
 // The current timer selected to run, based on array index
 let currentTimer = 0
 
 // Initializing the timer array with basic attributes
-let timers = [{ name: '', countdown: 0, formattedCountdown: '' }]
-
-// Test Timer array
-// TODO create dynamic timer array based on settings
-timers = [{ name: 'timer1', countdown: 1000 },
-  { name: 'timer2', countdown: 1000 }]
+let timers = [{ countdown: 0, formattedCountdown: 0 }]
 
 // A boolean which is set to true when the current timer is running
 let timerStarted = false
@@ -75,7 +72,7 @@ const formatTimer = (timer) => {
 const clearTimer = (timerInterval, currentTimer, user) => {
   clearInterval(timerInterval)
   timerStarted = false
-  timers[currentTimer] = { name: 'timer1', countdown: 1000 }
+  timers[currentTimer] = { countdown: timerSettings.timerCountdown }
   formatTimer(timers[currentTimer])
   io.to(user.room).emit('timer', { timers: timers })
 }
@@ -87,13 +84,26 @@ const clearTimer = (timerInterval, currentTimer, user) => {
 const switchTimer = (timerInterval, user) => {
   clearInterval(timerInterval)
   timerStarted = false
-  if (currentTimer === 0) {
-    currentTimer = 1
-    console.log(currentTimer)
+
+  const maxTimer = timers.length - 1
+
+  if (currentTimer < maxTimer) {
+    currentTimer++
   } else {
     currentTimer = 0
   }
+
   runTimer(timers[currentTimer], user)
+}
+
+const generateTimers = ({ timerCount, timerCountdown }) => {
+  for (let i = 0; i < timerCount; i++) {
+    timers[i] = { countdown: timerCountdown }
+  }
+
+  timers.forEach(timer => {
+    formatTimer(timer)
+  })
 }
 
 // specific client instance of a socket with a unique socket id
@@ -125,10 +135,10 @@ io.on('connect', (socket) => {
       text: `Welcome to room: ${user.room}, ${user.name}!`
     })
 
+    generateTimers(DEFAULTSETTINGS)
+
     // Emit the current timers to the new user
-    timers.forEach(timer => {
-      formatTimer(timer)
-    })
+
     io.to(user.room).emit('timer', { timers: timers })
 
     callback()
@@ -169,6 +179,17 @@ io.on('connect', (socket) => {
     if (user !== undefined) {
       io.to(user.room).emit('message', { user: user.name, text: message })
     }
+  })
+
+  socket.on('settings', (settings) => {
+    const user = getUser(socket.id)
+    if (user !== undefined) {
+      timerSettings = settings
+      timers = []
+      generateTimers(settings)
+    }
+
+    io.to(user.room).emit('timer', { timers: timers })
   })
 
   // Remove user from list upon disconnect event

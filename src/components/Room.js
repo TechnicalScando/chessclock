@@ -22,6 +22,8 @@ const Room = ({ location }) => {
   const [users, setUsers] = useState([])
   const [userCheck, setUserCheck] = useState(true)
   const [showSettings, setShowSettings] = useState(false)
+  const [timerCount, setTimerCount] = useState(2)
+  const [timerCountdown, setTimerCountdown] = useState(1000)
 
   // This useEffect run when the endpoint, location.search, or usercheck changes
   useEffect(() => {
@@ -90,6 +92,18 @@ const Room = ({ location }) => {
     }
   }
 
+  const sendSettings = (event) => {
+    // need to prevent default event behaviour
+    event.preventDefault()
+
+    socket.emit('settings', { timerCount, timerCountdown })
+    settingsToggle()
+  }
+
+  const debug = (event) => {
+    console.log(event.target.value)
+  }
+
   // if there is a user render the main webpage, otherwise render the error page
   if (userCheck) {
     return (
@@ -111,9 +125,17 @@ const Room = ({ location }) => {
           message={message}
           messages={messages}
         />
-        {showSettings
-          ? <Settings settingsToggle={settingsToggle} />
-          : null}
+        {showSettings &&
+          <Settings
+            timerCount={timerCount}
+            timerCountdown={timerCountdown}
+            setTimerCount={setTimerCount}
+            setTimerCountdown={setTimerCountdown}
+            settingsToggle={settingsToggle}
+            sendSettings={sendSettings}
+            debug={debug}
+          />}
+
         <Footer />
       </div>
 
