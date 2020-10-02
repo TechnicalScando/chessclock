@@ -200,6 +200,7 @@ io.on('connect', (socket) => {
   // Alert room to user leaving
   socket.on('disconnect', () => {
     const user = removeUser(socket.id)
+    io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) })
     // TODO alert other users that use has left the room
   })
 })
