@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { StyleSheet, css } from 'aphrodite'
 
 import queryString from 'query-string'
@@ -144,6 +145,9 @@ const Room = ({ location }) => {
     return (
       <div>
         <p>uhoh username taken</p>
+        <Link to='/'>
+          <button className='SubmitButton' type='go back'>Submit</button>
+        </Link>
       </div>
     )
   }
