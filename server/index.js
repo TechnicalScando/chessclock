@@ -198,10 +198,17 @@ io.on('connect', (socket) => {
 
   // Remove user from list upon disconnect event
   // Alert room to user leaving
+
   socket.on('disconnect', () => {
     const user = removeUser(socket.id)
-    io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) })
-    // TODO alert other users that use has left the room
+    if (user) {
+      io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) })
+      console.log(user.room)
+      socket.broadcast.emit('message', {
+        user: 'Admin',
+        text: `${user.name} has left room: ${user.room} `
+      })
+    }
   })
 })
 

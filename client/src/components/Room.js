@@ -15,7 +15,8 @@ import Settings from './Settings'
 let socket
 
 const Room = ({ location }) => {
-  const ENDPOINT = 'https://ultimate-chess-clock.herokuapp.com/'
+  // const ENDPOINT = 'https://ultimate-chess-clock.herokuapp.com/'
+  const ENDPOINT = 'localhost:5000'
 
   const [message, setMessage] = useState('')
   const [messages, setMessages] = useState([])
