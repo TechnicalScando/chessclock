@@ -19,6 +19,22 @@ app.use(cors)
 
 let testArray = []
 
+const simplifyTimers = (testArray) => {
+  const simplifiedArray = []
+  testArray.forEach(({ countdown, formattedCountdown }, index) => {
+    simplifiedArray[index] = { countdown, formattedCountdown }
+  })
+
+  return simplifiedArray
+}
+
+const emitTimers = (user) => {
+  setInterval(() => {
+    const newArray = simplifyTimers(testArray)
+    io.to(user.room).emit('timer', { timers: newArray })
+  }, 1000)
+}
+
 // specific client instance of a socket with a unique socket id
 // Runs on user connect
 io.on('connect', (socket) => {
@@ -65,10 +81,8 @@ io.on('connect', (socket) => {
     const user = getUser(socket.id)
     if (user !== undefined) {
       (testArray[0]).runTimer()
+      emitTimers(user)
     }
-    setInterval(() => {
-      io.to(user.room).emit('timer', testArray)
-    }, 5000)
   })
 
   // Recieve the clearTimer event from client
