@@ -14,19 +14,19 @@ class Timer {
         this.countdown--
         this.isRunning = true
         this.formatTimer()
-        console.log(this.formattedCountdown)
       }, 1000)
     }
   }
 
-  stopTimer (timer) {
-    clearInterval(timer.timerInterval)
-    timer.isRunning = false
+  stopTimer () {
+    clearInterval(this.timerInterval)
+    this.isRunning = false
   }
 
-  resetTimer (countdown, timer) {
-    this.stopTimer(timer)
-    timer.countdown = countdown
+  resetTimer (countdown) {
+    this.stopTimer()
+    this.countdown = countdown
+    this.formatTimer()
   }
 
   formatTimer () {

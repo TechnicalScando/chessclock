@@ -18,6 +18,7 @@ app.use(router)
 app.use(cors)
 
 let testArray = []
+let testInterval
 
 const simplifyTimers = (testArray) => {
   const simplifiedArray = []
@@ -29,10 +30,8 @@ const simplifyTimers = (testArray) => {
 }
 
 const emitTimers = (user) => {
-  setInterval(() => {
-    const newArray = simplifyTimers(testArray)
-    io.to(user.room).emit('timer', { timers: newArray })
-  }, 1000)
+  const newArray = simplifyTimers(testArray)
+  io.to(user.room).emit('timer', { timers: newArray })
 }
 
 // specific client instance of a socket with a unique socket id
@@ -81,7 +80,10 @@ io.on('connect', (socket) => {
     const user = getUser(socket.id)
     if (user !== undefined) {
       (testArray[0]).runTimer()
-      emitTimers(user)
+      testInterval = setInterval(() => {
+        emitTimers(user)
+        console.log('emit')
+      }, 1000)
     }
   })
 
@@ -90,7 +92,9 @@ io.on('connect', (socket) => {
   socket.on('clearTimer', () => {
     const user = getUser(socket.id)
     if (user !== undefined) {
-      // TODO clear the timer
+      testArray[0].resetTimer(1000)
+      emitTimers(user)
+      clearInterval(testInterval)
     }
   })
 
