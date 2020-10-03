@@ -1,16 +1,20 @@
 class Timer {
   constructor (countdown) {
-    this.countdown = 0
+    this.countdown = countdown
     this.formattedCountdown = '00:00:00'
     this.timerInterval = null
     this.isRunning = false
+
+    this.formatTimer()
   }
 
-  runTimer (timer) {
-    if (!timer.isRunning) {
-      timer.timerInterval = setInterval(() => {
-        timer.countdown--
-        timer.isRunning = true
+  runTimer () {
+    if (!this.isRunning) {
+      this.timerInterval = setInterval(() => {
+        this.countdown--
+        this.isRunning = true
+        this.formatTimer()
+        console.log(this.formattedCountdown)
       }, 1000)
     }
   }
@@ -25,10 +29,10 @@ class Timer {
     timer.countdown = countdown
   }
 
-  formatTimer (timer) {
-    const hours = ~~(timer.countdown / 3600)
-    const minutes = ~~((timer.countdown % 3600) / 60)
-    const seconds = ~~timer.countdown % 60
+  formatTimer () {
+    const hours = ~~(this.countdown / 3600)
+    const minutes = ~~((this.countdown % 3600) / 60)
+    const seconds = ~~this.countdown % 60
 
     let finalFormat = ''
     hours > 0
@@ -43,8 +47,8 @@ class Timer {
       ? finalFormat += `:0${seconds}`
       : finalFormat += `:${seconds}`
 
-    timer.formattedCountdown = finalFormat
+    this.formattedCountdown = finalFormat
   }
 }
 
-export default Timer
+module.exports = Timer

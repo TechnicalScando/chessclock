@@ -49,6 +49,7 @@ const Room = ({ location }) => {
   useEffect(() => {
     // Recieve timer event and update timers state
     socket.on('timer', ({ timers }) => {
+      console.log('timers called')
       setTimers(timers)
     })
 
