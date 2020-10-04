@@ -3,7 +3,7 @@ const Timer = require('./Timer')
 class TimerManager {
   constructor (timerCount, countdown) {
     this.timers = []
-    this.selectedTimer = 0
+    this.selectedTimer = 0 // index of currently selected timer
     for (let i = 0; i < timerCount; i++) {
       this.timers[i] = new Timer(countdown)
     }

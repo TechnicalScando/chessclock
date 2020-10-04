@@ -16,6 +16,7 @@ const io = socketio(server)
 
 let timerManager
 let emitInterval
+let timersetting // used for resetting timer to initial value
 
 app.use(router)
 app.use(cors)
@@ -24,6 +25,11 @@ const emitTimersOnInterval = (interval, user) => {
   emitInterval = setInterval(() => {
     io.to(user.room).emit('timer', { timers: timerManager.getTimers() })
   }, interval)
+}
+
+const generateAndEmitTimers = (timerCount, countdown, user) => {
+  timerManager = new TimerManager(timerCount, countdown)
+  io.to(user.room).emit('timer', { timers: timerManager.getTimers() })
 }
 
 // specific client instance of a socket with a unique socket id
@@ -55,12 +61,6 @@ io.on('connect', (socket) => {
       text: `Welcome to room: ${user.room}, ${user.name}!`
     })
 
-    // TODO CREATE TIMERS
-    const timerCount = 2
-    const countdown = 1000
-    timerManager = new TimerManager(timerCount, countdown)
-    io.to(user.room).emit('timer', { timers: timerManager.getTimers() })
-
     callback()
   })
 
@@ -80,7 +80,7 @@ io.on('connect', (socket) => {
     const user = getUser(socket.id)
     if (user !== undefined) {
       clearInterval(emitInterval)
-      timerManager.resetSelectedTimer(1000)
+      timerManager.resetSelectedTimer(timersetting)
       io.to(user.room).emit('timer', { timers: timerManager.getTimers() })
     }
   })
@@ -105,10 +105,11 @@ io.on('connect', (socket) => {
     }
   })
 
-  socket.on('settings', (settings) => {
+  socket.on('settings', ({ timerCount, timerCountdown }) => {
     const user = getUser(socket.id)
     if (user !== undefined) {
-      // TODO, create a new timer array based on settings
+      timersetting = timerCountdown
+      generateAndEmitTimers(timerCount, timerCountdown, user)
     }
   })
 

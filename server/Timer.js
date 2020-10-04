@@ -14,7 +14,6 @@ class Timer {
         this.countdown--
         this.isRunning = true
         this.formatTimer()
-        console.log(this.formattedCountdown)
       }, 1000)
     }
   }

@@ -42,6 +42,8 @@ const Room = ({ location }) => {
       if (error) {
         setUserCheck(false)
       }
+
+      socket.emit('settings', { timerCount, timerCountdown })
     })
   }, [ENDPOINT, location.search, setUserCheck])
 
