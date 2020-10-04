@@ -1,24 +1,44 @@
-const switchTimer = (timerInterval, user) => {
-  clearInterval(timerInterval)
-  timerStarted = false
+const Timer = require('./Timer')
 
-  const maxTimer = timers.length - 1
-
-  if (currentTimer < maxTimer) {
-    currentTimer++
-  } else {
-    currentTimer = 0
+class TimerManager {
+  constructor (timerCount, countdown) {
+    this.timers = []
+    this.selectedTimer = 0
+    for (let i = 0; i < timerCount; i++) {
+      this.timers[i] = new Timer(countdown)
+    }
   }
 
-  runTimer(timers[currentTimer], user)
-}
-
-const generateTimers = ({ timerCount, timerCountdown }) => {
-  for (let i = 0; i < timerCount; i++) {
-    timers[i] = { countdown: timerCountdown }
+  startSelectedTimer () {
+    this.timers[this.selectedTimer].runTimer()
   }
 
-  timers.forEach(timer => {
-    formatTimer(timer)
-  })
+  resetSelectedTimer (countdown) {
+    this.timers[this.selectedTimer].resetTimer(countdown)
+  }
+
+  switchTimer () {
+    this.timers[this.selectedTimer].stopTimer()
+
+    const maxTimer = this.timers.length - 1
+
+    if (this.selectedTimer < maxTimer) {
+      this.selectedTimer++
+    } else {
+      this.selectedTimer = 0
+    }
+
+    this.timers[this.selectedTimer].runTimer()
+  }
+
+  getTimers () {
+    const simplifiedArray = []
+    this.timers.forEach(({ countdown, formattedCountdown }, index) => {
+      simplifiedArray[index] = { countdown, formattedCountdown }
+    })
+
+    return simplifiedArray
+  }
 }
+
+module.exports = TimerManager

@@ -4,7 +4,7 @@ const http = require('http')
 const cors = require('cors')
 
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./users')
-const Timer = require('./Timer')
+const TimerManager = require('./TimerManager')
 
 const PORT = process.env.PORT || 5000
 
@@ -14,24 +14,16 @@ const app = express()
 const server = http.createServer(app)
 const io = socketio(server)
 
+let timerManager
+let emitInterval
+
 app.use(router)
 app.use(cors)
 
-let testArray = []
-let testInterval
-
-const simplifyTimers = (testArray) => {
-  const simplifiedArray = []
-  testArray.forEach(({ countdown, formattedCountdown }, index) => {
-    simplifiedArray[index] = { countdown, formattedCountdown }
-  })
-
-  return simplifiedArray
-}
-
-const emitTimers = (user) => {
-  const newArray = simplifyTimers(testArray)
-  io.to(user.room).emit('timer', { timers: newArray })
+const emitTimersOnInterval = (interval, user) => {
+  emitInterval = setInterval(() => {
+    io.to(user.room).emit('timer', { timers: timerManager.getTimers() })
+  }, interval)
 }
 
 // specific client instance of a socket with a unique socket id
@@ -64,12 +56,10 @@ io.on('connect', (socket) => {
     })
 
     // TODO CREATE TIMERS
-    const testTimer1 = new Timer(1000)
-    const testTimer2 = new Timer(1000)
-
-    testArray = [testTimer1, testTimer2]
-
-    io.to(user.room).emit('timer', { timers: testArray })
+    const timerCount = 2
+    const countdown = 1000
+    timerManager = new TimerManager(timerCount, countdown)
+    io.to(user.room).emit('timer', { timers: timerManager.getTimers() })
 
     callback()
   })
@@ -79,11 +69,8 @@ io.on('connect', (socket) => {
   socket.on('timerStart', () => {
     const user = getUser(socket.id)
     if (user !== undefined) {
-      (testArray[0]).runTimer()
-      testInterval = setInterval(() => {
-        emitTimers(user)
-        console.log('emit')
-      }, 1000)
+      timerManager.startSelectedTimer()
+      emitTimersOnInterval(1000, user)
     }
   })
 
@@ -92,9 +79,9 @@ io.on('connect', (socket) => {
   socket.on('clearTimer', () => {
     const user = getUser(socket.id)
     if (user !== undefined) {
-      testArray[0].resetTimer(1000)
-      emitTimers(user)
-      clearInterval(testInterval)
+      clearInterval(emitInterval)
+      timerManager.resetSelectedTimer(1000)
+      io.to(user.room).emit('timer', { timers: timerManager.getTimers() })
     }
   })
 
@@ -103,7 +90,9 @@ io.on('connect', (socket) => {
   socket.on('switchYield', () => {
     const user = getUser(socket.id)
     if (user !== undefined) {
-      // TODO switch the current timer
+      clearInterval(emitInterval)
+      timerManager.switchTimer()
+      emitTimersOnInterval(1000, user)
     }
   })
 
