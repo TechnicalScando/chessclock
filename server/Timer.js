@@ -4,6 +4,7 @@ class Timer {
     this.formattedCountdown = '00:00:00'
     this.timerInterval = null
     this.isRunning = false
+    this.user = null
 
     this.formatTimer()
   }
@@ -48,6 +49,10 @@ class Timer {
       : finalFormat += `:${seconds}`
 
     this.formattedCountdown = finalFormat
+  }
+
+  setUser (user) {
+    this.user = user
   }
 }
 

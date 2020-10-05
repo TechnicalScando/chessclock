@@ -33,11 +33,15 @@ class TimerManager {
 
   getTimers () {
     const simplifiedArray = []
-    this.timers.forEach(({ countdown, formattedCountdown }, index) => {
-      simplifiedArray[index] = { countdown, formattedCountdown }
+    this.timers.forEach(({ countdown, formattedCountdown, user }, index) => {
+      simplifiedArray[index] = { countdown, formattedCountdown, user }
     })
 
     return simplifiedArray
+  }
+
+  setUserOfTimer (index, user) {
+    this.timers[index].setUser(user)
   }
 }
 

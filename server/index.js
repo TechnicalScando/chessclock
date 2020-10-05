@@ -113,6 +113,16 @@ io.on('connect', (socket) => {
     }
   })
 
+  socket.on('joinTimer', (timerIndex) => {
+    const user = getUser(socket.id)
+    if (user !== undefined) {
+      console.log('Emit recieved')
+      console.log(timerIndex)
+      timerManager.setUserOfTimer(timerIndex, user.name)
+      io.to(user.room).emit('timer', { timers: timerManager.getTimers() })
+    }
+  })
+
   // Remove user from list upon disconnect event
   // Alert room to user leaving
   socket.on('disconnect', () => {

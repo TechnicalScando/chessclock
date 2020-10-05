@@ -3,10 +3,19 @@ import { StyleSheet, css } from 'aphrodite'
 
 import Timer from './Timer'
 
-const PlayArea = ({ timers, startTimer, clearTimer, switchYield, settingsToggle }) => (
+const PlayArea = ({
+  timers, startTimer, clearTimer,
+  switchYield, settingsToggle, joinTimer
+}) => (
   <div className={css(styles.PlayAreaDiv)}>
     <div className={css(styles.PlayerTimerArea)}>
-      {timers.map((timer, i) => <Timer key={i} timer={timer.formattedCountdown} />)}
+      {timers.map((timer, i) =>
+        <Timer
+          key={i}
+          index={i}
+          timer={timer}
+          joinTimer={joinTimer}
+        />)}
     </div>
     <div className={css(styles.PlayButtons)}>
       <button onClick={startTimer}>Start</button>

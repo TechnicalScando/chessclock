@@ -51,8 +51,8 @@ const Room = ({ location }) => {
   useEffect(() => {
     // Recieve timer event and update timers state
     socket.on('timer', ({ timers }) => {
-      console.log('timers called')
       setTimers(timers)
+      console.log(timers)
     })
 
     // Recieve message event and update messages state
@@ -74,6 +74,15 @@ const Room = ({ location }) => {
   // Linked to button in PlayArea, clears the currently selected timer
   const clearTimer = () => {
     socket.emit('clearTimer')
+  }
+
+  // Associate a timer with a user
+  const joinTimer = (event) => {
+    console.log(`TODO join timer ${event.target.value}`)
+    const timerIndex = event.target.value
+    event.preventDefault()
+
+    socket.emit('joinTimer', timerIndex)
   }
 
   // Linked to button in PlayArea, switches between players timers
@@ -120,6 +129,7 @@ const Room = ({ location }) => {
           switchYield={switchYield}
           clearTimer={clearTimer}
           settingsToggle={settingsToggle}
+          joinTimer={joinTimer}
         />
         <CreateNewRoom
           users={users}
