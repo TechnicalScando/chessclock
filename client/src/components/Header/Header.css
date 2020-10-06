@@ -1,0 +1,5 @@
+.header{
+    grid-area: head;
+    text-align: center;
+    background-color: gray;
+}

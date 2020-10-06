@@ -1,6 +1,8 @@
 import React from 'react'
 import MessageBox from '../MessageBox/MessageBox'
 
+import './ChatBox.css'
+
 const ChatBox = ({ sendMessage, setMessage, message, messages }) => (
 
   <div className='chatcontainer'>

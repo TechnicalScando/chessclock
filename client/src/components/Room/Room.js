@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom'
 import queryString from 'query-string'
 import io from 'socket.io-client'
 
+import './Room.css'
+
 import Header from '../Header/Header'
 import Footer from '../Footer/Footer'
 import PlayArea from '../PlayArea/PlayArea'

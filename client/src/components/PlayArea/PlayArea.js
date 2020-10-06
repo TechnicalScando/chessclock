@@ -2,6 +2,8 @@ import React from 'react'
 
 import Timer from '../Timer/Timer'
 
+import './PlayArea.css'
+
 const PlayArea = ({
   timers, startTimer, clearTimer,
   switchYield, settingsToggle, joinTimer,

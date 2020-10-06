@@ -1,0 +1,7 @@
+.maindiv {
+    display: grid;
+    grid-template-areas: "head head head"
+                         "timer timer info"
+                         "timer timer chat" 
+                         "foot foot foot" ;
+}
