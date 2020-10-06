@@ -13,13 +13,7 @@ const CreateNewRoom = ({ users }) => (
 
 const styles = StyleSheet.create({
   CreateNewRoomDiv: {
-    border: 1,
-    borderStyle: 'solid',
-    width: 374,
-    height: 98,
-    top: 221,
-    left: 1001,
-    position: 'absolute'
+
   }
 })
 

@@ -10,7 +10,7 @@ const MessageBox = ({ messages }) => (
 
 const styles = StyleSheet.create({
   ScrollContainer: {
-    height: 480
+
   }
 })
 

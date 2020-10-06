@@ -7,11 +7,7 @@ const Footer = () => (
 
 const styles = StyleSheet.create({
   footerDiv: {
-    backgroundColor: '#0D88BC',
-    width: 1440,
-    height: 97,
-    top: 925,
-    position: 'absolute'
+
   }
 })
 

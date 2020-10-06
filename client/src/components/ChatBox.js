@@ -27,29 +27,18 @@ const ChatBox = ({ sendMessage, setMessage, message, messages }) => (
 
 const styles = StyleSheet.create({
   chatBoxDiv: {
-    border: 1,
-    borderStyle: 'solid',
-    width: 374,
-    height: 523,
-    top: 336,
-    left: 1001,
-    position: 'absolute'
+
   },
 
   InputSubmit: {
-    width: 374
+
   },
 
   ChatInput: {
-    width: '75%',
-    float: 'left',
-    margin: 5
+
   },
 
   ChatInputButton: {
-    width: '15%',
-    float: 'left',
-    marginTop: 5
 
   }
 })

@@ -36,15 +36,6 @@ const Settings = ({ timerCountdown, timerCount, setTimerCount, setTimerCountdown
 
 const styles = StyleSheet.create({
   Settings: {
-    height: '25%',
-    width: '25%',
-    margin: 'auto',
-    position: 'fixed',
-    backgroundColor: 'white',
-    border: 3,
-    borderStyle: 'solid',
-    top: '50%',
-    left: '50%'
 
   }
 })

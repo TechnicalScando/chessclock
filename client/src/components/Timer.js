@@ -34,29 +34,20 @@ const Timer = ({ timer, joinTimer, leaveTimer, index }) => {
 
 const styles = StyleSheet.create({
   TimerDiv: {
-    fontSize: 96,
-    fontWeight: 400,
-    font: 'Roboto'
+
   },
 
   TimerContainer: {
-    backgroundColor: 'FFFFFF',
-    height: 158,
-    width: 447
+
 
   },
 
   TimerArea: {
-    float: 'left',
-    width: 447,
-    height: 235,
-    left: 54,
-    top: 382
+
   },
 
   PlayerName: {
-    margin: 5,
-    padding: 5
+
   }
 
 })

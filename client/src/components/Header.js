@@ -9,18 +9,15 @@ const Header = ({ name, room }) => (
 
 const styles = StyleSheet.create({
   headerDiv: {
-    backgroundColor: '#0D88BC',
-    width: 1440,
-    height: 173,
-    position: 'absolute'
+
   },
 
   HeaderText: {
-    textAlign: 'center'
+
   },
 
   InfoText: {
-    textAlign: 'center'
+
   }
 })
 
