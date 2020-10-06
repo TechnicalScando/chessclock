@@ -1,15 +1,14 @@
 import React from 'react'
-import { StyleSheet, css } from 'aphrodite'
 
-import Timer from './Timer'
+import Timer from '../Timer/Timer'
 
 const PlayArea = ({
   timers, startTimer, clearTimer,
   switchYield, settingsToggle, joinTimer,
   leaveTimer, hasJoined
 }) => (
-  <div className={css(styles.PlayAreaDiv)}>
-    <div className={css(styles.PlayerTimerArea)}>
+  <div className='playareacontainer'>
+    <div>
       {timers.map((timer, i) =>
         <Timer
           key={i}
@@ -20,34 +19,16 @@ const PlayArea = ({
 
         />)}
     </div>
-    <div className={css(styles.PlayButtons)}>
+    <div>
       <button onClick={startTimer}>Start</button>
       <button onClick={switchYield}>Switch/Yield</button>
       <button onClick={clearTimer}>Clear</button>
     </div>
-    <div className={css(styles.SettingsButtons)}>
+    <div>
       <button onClick={settingsToggle}>Settings</button>
     </div>
   </div>
 
 )
-
-const styles = StyleSheet.create({
-  PlayAreaDiv: {
-
-  },
-
-  PlayerTimerArea: {
-
-  },
-
-  SettingsButtons: {
-
-  },
-
-  PlayButtons: {
-
-  }
-})
 
 export default PlayArea

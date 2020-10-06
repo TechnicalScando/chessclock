@@ -1,13 +1,12 @@
 import React from 'react'
-import { StyleSheet, css } from 'aphrodite'
 
 const Settings = ({ timerCountdown, timerCount, setTimerCount, setTimerCountdown, settingsToggle, sendSettings }) => {
   return (
 
-    <div className={css(styles.Settings)}>
+    <div className='settingscontainer'>
       <div>
         <input
-          className={css(styles.TimerInput)}
+
           type='text'
           name='timerCountdown'
           placeholder={timerCountdown}
@@ -24,7 +23,7 @@ const Settings = ({ timerCountdown, timerCount, setTimerCount, setTimerCountdown
           <option value='6'>6</option>
         </select>
         <button
-          className={css(styles.TimerInputButton)}
+
           onClick={e => sendSettings(e)}
         >Submit
         </button>
@@ -33,11 +32,5 @@ const Settings = ({ timerCountdown, timerCount, setTimerCount, setTimerCountdown
     </div>
   )
 }
-
-const styles = StyleSheet.create({
-  Settings: {
-
-  }
-})
 
 export default Settings

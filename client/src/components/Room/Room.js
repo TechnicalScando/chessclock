@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { StyleSheet, css } from 'aphrodite'
 
 import queryString from 'query-string'
 import io from 'socket.io-client'
 
-import Header from './Header'
-import Footer from './Footer'
-import PlayArea from './PlayArea'
-import ChatBox from './ChatBox'
-import CreateNewRoom from './CreateNewRoom'
-import Settings from './Settings'
+import Header from '../Header/Header'
+import Footer from '../Footer/Footer'
+import PlayArea from '../PlayArea/PlayArea'
+import ChatBox from '../ChatBox/ChatBox'
+import CreateNewRoom from '../CreateNewRoom/CreateNewRoom'
+import Settings from '../Settings/Settings'
 
 let socket
 
@@ -127,7 +126,7 @@ const Room = ({ location }) => {
   // if there is a user render the main webpage, otherwise render the error page
   if (userCheck) {
     return (
-      <div className={css(styles.MainDiv)}>
+      <div className='maindiv'>
         <Header />
         <PlayArea
           timers={timers}
@@ -174,11 +173,5 @@ const Room = ({ location }) => {
     )
   }
 }
-
-const styles = StyleSheet.create({
-  MainDiv: {
-
-  }
-})
 
 export default Room

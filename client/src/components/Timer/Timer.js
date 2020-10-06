@@ -1,5 +1,4 @@
 import React from 'react'
-import { StyleSheet, css } from 'aphrodite'
 
 const Timer = ({ timer, joinTimer, leaveTimer, index }) => {
   const DEFAULTUSER = '---Join'
@@ -20,36 +19,16 @@ const Timer = ({ timer, joinTimer, leaveTimer, index }) => {
   }
 
   return (
-    <div className={css(styles.TimerArea)}>
-      <h1 className={css(styles.PlayerName)}>
+    <div className='timercontainer'>
+      <h1>
         {timer.user === null ? DEFAULTUSER : timer.user}
       </h1>
-      <div className={css(styles.TimerContainer)}>
-        <div className={css(styles.TimerDiv)}> {timer.formattedCountdown} </div>
+      <div>
+        <div> {timer.formattedCountdown} </div>
       </div>
       {button}
     </div>
   )
 }
-
-const styles = StyleSheet.create({
-  TimerDiv: {
-
-  },
-
-  TimerContainer: {
-
-
-  },
-
-  TimerArea: {
-
-  },
-
-  PlayerName: {
-
-  }
-
-})
 
 export default Timer
