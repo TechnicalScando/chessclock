@@ -1,12 +1,22 @@
 import React from 'react'
 import { StyleSheet, css } from 'aphrodite'
 
-const Timer = ({ timer, joinTimer, index }) => {
-  const hasJoined = false
+const Timer = ({ timer, joinTimer, leaveTimer, index }) => {
   const DEFAULTUSER = '---Join'
 
-  const handleClick = (event) => {
+  const handleJoinClick = (event) => {
     joinTimer(event)
+  }
+  const handleLeaveClick = (event) => {
+    leaveTimer(event)
+  }
+
+  let button
+
+  if (timer.user == null) {
+    button = <button value={index} onClick={handleJoinClick}>Join</button>
+  } else {
+    button = <button value={index} onClick={handleLeaveClick}>Leave</button>
   }
 
   return (
@@ -17,7 +27,7 @@ const Timer = ({ timer, joinTimer, index }) => {
       <div className={css(styles.TimerContainer)}>
         <div className={css(styles.TimerDiv)}> {timer.formattedCountdown} </div>
       </div>
-      {!hasJoined && <button value={index} onClick={handleClick}>Join</button>}
+      {button}
     </div>
   )
 }

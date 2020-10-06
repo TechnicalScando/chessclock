@@ -5,7 +5,8 @@ import Timer from './Timer'
 
 const PlayArea = ({
   timers, startTimer, clearTimer,
-  switchYield, settingsToggle, joinTimer
+  switchYield, settingsToggle, joinTimer,
+  leaveTimer, hasJoined
 }) => (
   <div className={css(styles.PlayAreaDiv)}>
     <div className={css(styles.PlayerTimerArea)}>
@@ -15,6 +16,8 @@ const PlayArea = ({
           index={i}
           timer={timer}
           joinTimer={joinTimer}
+          leaveTimer={leaveTimer}
+
         />)}
     </div>
     <div className={css(styles.PlayButtons)}>

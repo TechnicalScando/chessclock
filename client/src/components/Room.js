@@ -78,11 +78,17 @@ const Room = ({ location }) => {
 
   // Associate a timer with a user
   const joinTimer = (event) => {
-    console.log(`TODO join timer ${event.target.value}`)
     const timerIndex = event.target.value
     event.preventDefault()
 
     socket.emit('joinTimer', timerIndex)
+  }
+
+  const leaveTimer = (event) => {
+    const timerIndex = event.target.value
+    event.preventDefault()
+
+    socket.emit('leaveTimer', timerIndex)
   }
 
   // Linked to button in PlayArea, switches between players timers
@@ -130,6 +136,8 @@ const Room = ({ location }) => {
           clearTimer={clearTimer}
           settingsToggle={settingsToggle}
           joinTimer={joinTimer}
+          leaveTimer={leaveTimer}
+
         />
         <CreateNewRoom
           users={users}

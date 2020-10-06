@@ -5,6 +5,7 @@ class Timer {
     this.timerInterval = null
     this.isRunning = false
     this.user = null
+    this.hasUser = false
 
     this.formatTimer()
   }
@@ -52,7 +53,11 @@ class Timer {
   }
 
   setUser (user) {
-    this.user = user
+    if (this.user == null && !(this.user === user)) {
+      this.user = user
+    } else if (user == null) {
+      this.user = user
+    }
   }
 }
 

@@ -116,9 +116,15 @@ io.on('connect', (socket) => {
   socket.on('joinTimer', (timerIndex) => {
     const user = getUser(socket.id)
     if (user !== undefined) {
-      console.log('Emit recieved')
-      console.log(timerIndex)
       timerManager.setUserOfTimer(timerIndex, user.name)
+      io.to(user.room).emit('timer', { timers: timerManager.getTimers() })
+    }
+  })
+
+  socket.on('leaveTimer', (timerIndex) => {
+    const user = getUser(socket.id)
+    if (user !== undefined) {
+      timerManager.setUserOfTimer(timerIndex, null)
       io.to(user.room).emit('timer', { timers: timerManager.getTimers() })
     }
   })
