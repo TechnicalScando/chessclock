@@ -1,3 +1,13 @@
 .newroomcontainer{
     grid-area: info;
 }
+
+.roomurltext {
+    width: 100%;
+    white-space: nowrap;
+}
+
+.userlist {
+    border-top: groove;
+    margin-top: 2px;
+}

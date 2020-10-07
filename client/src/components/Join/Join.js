@@ -1,12 +1,15 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import './Join.css'
+
 const Join = () => {
   const [name, setName] = useState('')
   const [room, setRoom] = useState('')
 
   return (
-    <div>
+    <div className='joincontainer'>
+      <h3>Create a room!</h3>
       <input
         placeholder='Name' className='NameInput' type='text'
         onChange={(event) => setName(event.target.value)}

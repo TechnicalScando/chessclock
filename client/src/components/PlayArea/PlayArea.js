@@ -10,7 +10,7 @@ const PlayArea = ({
   leaveTimer, hasJoined
 }) => (
   <div className='playareacontainer'>
-    <div>
+    <div className='timerplayarea'>
       {timers.map((timer, i) =>
         <Timer
           key={i}
@@ -21,10 +21,10 @@ const PlayArea = ({
 
         />)}
     </div>
-    <div>
-      <button onClick={startTimer}>Start</button>
-      <button onClick={switchYield}>Switch/Yield</button>
-      <button onClick={clearTimer}>Clear</button>
+    <div className='buttoncontainer'>
+      <button className='timerbutton' onClick={startTimer}>Start</button>
+      <button className='timerbutton' onClick={switchYield}>Switch/Yield</button>
+      <button className='timerbutton' onClick={clearTimer}>Clear</button>
     </div>
     <div>
       <button onClick={settingsToggle}>Settings</button>

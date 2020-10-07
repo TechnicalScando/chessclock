@@ -1,7 +1,16 @@
 .maindiv {
     display: grid;
-    grid-template-areas: "head head head"
-                         "timer timer info"
-                         "timer timer chat" 
-                         "foot foot foot" ;
+    width: 100%;
+    height: 100vh;
+    overflow: auto;
+    grid-template-areas: "head head head head head"
+                         ".    .    .    info ."
+                         ".    timer timer chat ." 
+                         "foot   foot foot foot foot" ;
+
+    grid-template-rows: 1fr 1fr 3fr 1fr ;       
+    grid-template-columns:.5fr 2fr 3fr 2fr .5fr;  
+    gap: 1em;   
+    background-color: #f2f2f2;         
+
 }

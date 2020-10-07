@@ -1,5 +1,7 @@
 import React from 'react'
 
+import './Timer.css'
+
 const Timer = ({ timer, joinTimer, leaveTimer, index }) => {
   const DEFAULTUSER = '---Join'
 
@@ -13,20 +15,24 @@ const Timer = ({ timer, joinTimer, leaveTimer, index }) => {
   let button
 
   if (timer.user == null) {
-    button = <button value={index} onClick={handleJoinClick}>Join</button>
+    button = <button className='joinleavebutton' value={index} onClick={handleJoinClick}>Join</button>
   } else {
-    button = <button value={index} onClick={handleLeaveClick}>Leave</button>
+    button = <button className='joinleavebutton' value={index} onClick={handleLeaveClick}>Leave</button>
   }
 
   return (
-    <div className='timercontainer'>
-      <h1>
-        {timer.user === null ? DEFAULTUSER : timer.user}
-      </h1>
-      <div>
-        <div> {timer.formattedCountdown} </div>
+    <div className='outertimerdiv'>
+      <div className='userjoincontainer'>
+        <h1>
+          {timer.user === null ? DEFAULTUSER : timer.user}
+        </h1>
+        {button}
       </div>
-      {button}
+
+      <div className='timercontainer'>
+        <div className='timertext'> {timer.formattedCountdown} </div>
+      </div>
+
     </div>
   )
 }

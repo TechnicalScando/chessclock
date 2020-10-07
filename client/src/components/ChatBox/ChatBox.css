@@ -1,3 +1,35 @@
 .chatcontainer {
     grid-area: chat;
 }
+
+.messagebox {
+    height: 450px;
+    background-color: white;
+}
+
+.chatheader {
+    height: 50px;
+    background-color: #0d88bc;
+}
+
+.inputcontainer {
+    background-color: white;
+    border-top: groove;
+    height: 50px;
+    width: 100%;
+    overflow: auto;
+}
+
+.chatinput {
+    width: 80%;
+    height: 30px;
+    margin: 2px;
+    padding: 2px;
+}
+
+.submitbutton {
+    width: 15%;
+    height: 37px;
+    margin: 2px;
+    padding: 2px
+}
