@@ -4,6 +4,9 @@
     margin: 10px;
     padding: 10px;
     border-radius: 10%;
+    display: flex;
+    justify-items: center;
+    align-items: center;
 }
 
 .timertext {
