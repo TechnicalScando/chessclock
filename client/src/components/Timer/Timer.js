@@ -2,7 +2,7 @@ import React from 'react'
 
 import './Timer.css'
 
-const Timer = ({ timer, joinTimer, leaveTimer, index }) => {
+const Timer = ({ timer, joinTimer, leaveTimer, index, userName }) => {
   const DEFAULTUSER = '---Join'
 
   const handleJoinClick = (event) => {
@@ -16,7 +16,7 @@ const Timer = ({ timer, joinTimer, leaveTimer, index }) => {
 
   if (timer.user == null) {
     button = <button className='joinleavebutton' value={index} onClick={handleJoinClick}>Join</button>
-  } else {
+  } else if (timer.user === userName.toLowerCase()) {
     button = <button className='joinleavebutton' value={index} onClick={handleLeaveClick}>Leave</button>
   }
 

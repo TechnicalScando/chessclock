@@ -19,6 +19,7 @@ const Room = ({ location }) => {
   // const ENDPOINT = 'https://ultimate-chess-clock.herokuapp.com/'
   const ENDPOINT = 'localhost:5000'
 
+  const [name, setName] = useState('')
   const [message, setMessage] = useState('')
   const [messages, setMessages] = useState([])
   const [timers, setTimers] = useState([])
@@ -33,6 +34,7 @@ const Room = ({ location }) => {
     // Get name and room from url
     const { name, room } = queryString.parse(location.search)
 
+    setName(name)
     // create client side socket at current endpoint
     socket = io(ENDPOINT)
 
@@ -138,6 +140,7 @@ const Room = ({ location }) => {
           settingsToggle={settingsToggle}
           joinTimer={joinTimer}
           leaveTimer={leaveTimer}
+          name={name}
 
         />
         <CreateNewRoom

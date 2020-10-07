@@ -7,7 +7,7 @@ import './PlayArea.css'
 const PlayArea = ({
   timers, startTimer, clearTimer,
   switchYield, settingsToggle, joinTimer,
-  leaveTimer, hasJoined
+  leaveTimer, name
 }) => (
   <div className='playareacontainer'>
     <div className='timerplayarea'>
@@ -18,6 +18,7 @@ const PlayArea = ({
           timer={timer}
           joinTimer={joinTimer}
           leaveTimer={leaveTimer}
+          userName={name}
 
         />)}
     </div>
