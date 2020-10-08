@@ -1,4 +1,9 @@
 .settingscontainer{
-    border: groove;
-    background-color: red;
+    background-color: white;
+    
+}
+
+.settingsbutton {
+    margin: 20px;
+    height: 20px;
 }

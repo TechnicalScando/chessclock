@@ -21,7 +21,6 @@ const Room = ({ location }) => {
 
   const [name, setName] = useState('')
 
-  const [users, setUsers] = useState([])
   const [userCheck, setUserCheck] = useState(true)
 
   // This useEffect run when the endpoint, location.search, or usercheck changes
@@ -43,21 +42,13 @@ const Room = ({ location }) => {
     })
   }, [ENDPOINT, location.search, setUserCheck])
 
-  // Thos useEffect runs on any change
-  useEffect(() => {
-    // Recieve roomData event and update users state
-    socket.on('roomData', ({ users }) => {
-      setUsers(users)
-    })
-  }, [])
-
   // if there is a user render the main webpage, otherwise render the error page
   if (userCheck) {
     return (
       <div className='maindiv'>
         <Header />
         <PlayArea socket={socket} name={name} />
-        <CreateNewRoom users={users} />
+        <CreateNewRoom socket={socket} />
         <ChatBox socket={socket} />
         <Settings socket={socket} />
         <Footer />

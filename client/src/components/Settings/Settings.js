@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
+import './Settings.css'
+
 const Settings = ({ socket }) => {
   const [timerCount, setTimerCount] = useState(2)
   const [timerCountdown, setTimerCountdown] = useState(1000)
@@ -25,7 +27,7 @@ const Settings = ({ socket }) => {
 
   if (!showSettings) {
     return (
-      <button onClick={settingsToggle}>Settings</button>
+      <button className='settingsbutton' onClick={settingsToggle}>Settings</button>
     )
   } else {
     return (
