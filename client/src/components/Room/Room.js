@@ -22,10 +22,11 @@ const Room = ({ location }) => {
   const [name, setName] = useState('')
   const [message, setMessage] = useState('')
   const [messages, setMessages] = useState([])
-  const [timers, setTimers] = useState([])
+  const [showSettings, setShowSettings] = useState(false)
+
   const [users, setUsers] = useState([])
   const [userCheck, setUserCheck] = useState(true)
-  const [showSettings, setShowSettings] = useState(false)
+
   const [timerCount, setTimerCount] = useState(2)
   const [timerCountdown, setTimerCountdown] = useState(1000)
 
@@ -52,12 +53,6 @@ const Room = ({ location }) => {
 
   // Thos useEffect runs on any change
   useEffect(() => {
-    // Recieve timer event and update timers state
-    socket.on('timer', ({ timers }) => {
-      setTimers(timers)
-      console.log(timers)
-    })
-
     // Recieve message event and update messages state
     socket.on('message', message => {
       setMessages(messages => [...messages, message])
@@ -68,40 +63,6 @@ const Room = ({ location }) => {
       setUsers(users)
     })
   }, [])
-
-  // Linked to button in PlayArea, starts the currently selected timer
-  const startTimer = () => {
-    socket.emit('timerStart')
-  }
-
-  // Linked to button in PlayArea, clears the currently selected timer
-  const clearTimer = () => {
-    socket.emit('clearTimer')
-  }
-
-  // Associate a timer with a user
-  const joinTimer = (event) => {
-    const timerIndex = event.target.value
-    event.preventDefault()
-
-    socket.emit('joinTimer', timerIndex)
-  }
-
-  const leaveTimer = (event) => {
-    const timerIndex = event.target.value
-    event.preventDefault()
-
-    socket.emit('leaveTimer', timerIndex)
-  }
-
-  // Linked to button in PlayArea, switches between players timers
-  const switchYield = () => {
-    socket.emit('switchYield')
-  }
-
-  const settingsToggle = () => {
-    setShowSettings(!showSettings)
-  }
 
   // Linked to input event in Chatbox
   // if there is a value a message is emmited to the server
@@ -123,6 +84,10 @@ const Room = ({ location }) => {
     settingsToggle()
   }
 
+  const settingsToggle = () => {
+    setShowSettings(!showSettings)
+  }
+
   const debug = (event) => {
     console.log(event.target.value)
   }
@@ -133,13 +98,8 @@ const Room = ({ location }) => {
       <div className='maindiv'>
         <Header />
         <PlayArea
-          timers={timers}
-          startTimer={startTimer}
-          switchYield={switchYield}
-          clearTimer={clearTimer}
+          socket={socket}
           settingsToggle={settingsToggle}
-          joinTimer={joinTimer}
-          leaveTimer={leaveTimer}
           name={name}
 
         />
