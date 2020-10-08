@@ -20,15 +20,9 @@ const Room = ({ location }) => {
   const ENDPOINT = 'localhost:5000'
 
   const [name, setName] = useState('')
-  const [message, setMessage] = useState('')
-  const [messages, setMessages] = useState([])
-  const [showSettings, setShowSettings] = useState(false)
 
   const [users, setUsers] = useState([])
   const [userCheck, setUserCheck] = useState(true)
-
-  const [timerCount, setTimerCount] = useState(2)
-  const [timerCountdown, setTimerCountdown] = useState(1000)
 
   // This useEffect run when the endpoint, location.search, or usercheck changes
   useEffect(() => {
@@ -46,83 +40,26 @@ const Room = ({ location }) => {
       if (error) {
         setUserCheck(false)
       }
-
-      socket.emit('settings', { timerCount, timerCountdown })
     })
   }, [ENDPOINT, location.search, setUserCheck])
 
   // Thos useEffect runs on any change
   useEffect(() => {
-    // Recieve message event and update messages state
-    socket.on('message', message => {
-      setMessages(messages => [...messages, message])
-    })
-
     // Recieve roomData event and update users state
     socket.on('roomData', ({ users }) => {
       setUsers(users)
     })
   }, [])
 
-  // Linked to input event in Chatbox
-  // if there is a value a message is emmited to the server
-  const sendMessage = (event) => {
-    // need to prevent default event behaviour
-    event.preventDefault()
-
-    if (message) {
-      socket.emit('sendMessage', message)
-      setMessage('')
-    }
-  }
-
-  const sendSettings = (event) => {
-    // need to prevent default event behaviour
-    event.preventDefault()
-
-    socket.emit('settings', { timerCount, timerCountdown })
-    settingsToggle()
-  }
-
-  const settingsToggle = () => {
-    setShowSettings(!showSettings)
-  }
-
-  const debug = (event) => {
-    console.log(event.target.value)
-  }
-
   // if there is a user render the main webpage, otherwise render the error page
   if (userCheck) {
     return (
       <div className='maindiv'>
         <Header />
-        <PlayArea
-          socket={socket}
-          settingsToggle={settingsToggle}
-          name={name}
-
-        />
-        <CreateNewRoom
-          users={users}
-        />
-        <ChatBox
-          sendMessage={sendMessage}
-          setMessage={setMessage}
-          message={message}
-          messages={messages}
-        />
-        {showSettings &&
-          <Settings
-            timerCount={timerCount}
-            timerCountdown={timerCountdown}
-            setTimerCount={setTimerCount}
-            setTimerCountdown={setTimerCountdown}
-            settingsToggle={settingsToggle}
-            sendSettings={sendSettings}
-            debug={debug}
-          />}
-
+        <PlayArea socket={socket} name={name} />
+        <CreateNewRoom users={users} />
+        <ChatBox socket={socket} />
+        <Settings socket={socket} />
         <Footer />
       </div>
 

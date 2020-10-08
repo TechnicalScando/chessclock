@@ -2,22 +2,29 @@ import React from 'react'
 
 import './Timer.css'
 
-const Timer = ({ timer, joinTimer, leaveTimer, index, userName }) => {
+const Timer = ({ socket, timer, index, userName }) => {
   const DEFAULTUSER = '---Join'
 
-  const handleJoinClick = (event) => {
-    joinTimer(event)
+  const joinTimer = (event) => {
+    const timerIndex = event.target.value
+    event.preventDefault()
+
+    socket.emit('joinTimer', timerIndex)
   }
-  const handleLeaveClick = (event) => {
-    leaveTimer(event)
+
+  const leaveTimer = (event) => {
+    const timerIndex = event.target.value
+    event.preventDefault()
+
+    socket.emit('leaveTimer', timerIndex)
   }
 
   let button
 
   if (timer.user == null) {
-    button = <button className='joinleavebutton' value={index} onClick={handleJoinClick}>Join</button>
+    button = <button className='joinleavebutton' value={index} onClick={joinTimer}>Join</button>
   } else if (timer.user === userName.toLowerCase()) {
-    button = <button className='joinleavebutton' value={index} onClick={handleLeaveClick}>Leave</button>
+    button = <button className='joinleavebutton' value={index} onClick={leaveTimer}>Leave</button>
   }
 
   return (

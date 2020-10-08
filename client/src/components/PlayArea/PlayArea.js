@@ -31,31 +31,15 @@ const PlayArea = ({ socket, settingsToggle, name }) => {
     socket.emit('switchYield')
   }
 
-  // Associate a timer with a user
-  const joinTimer = (event) => {
-    const timerIndex = event.target.value
-    event.preventDefault()
-
-    socket.emit('joinTimer', timerIndex)
-  }
-
-  const leaveTimer = (event) => {
-    const timerIndex = event.target.value
-    event.preventDefault()
-
-    socket.emit('leaveTimer', timerIndex)
-  }
-
   return (
     <div className='playareacontainer'>
       <div className='timerplayarea'>
         {timers.map((timer, i) =>
           <Timer
+            socket={socket}
             key={i}
             index={i}
             timer={timer}
-            joinTimer={joinTimer}
-            leaveTimer={leaveTimer}
             userName={name}
 
           />)}
@@ -65,9 +49,7 @@ const PlayArea = ({ socket, settingsToggle, name }) => {
         <button className='timerbutton' onClick={switchYield}>Switch/Yield</button>
         <button className='timerbutton' onClick={clearTimer}>Clear</button>
       </div>
-      <div>
-        <button onClick={settingsToggle}>Settings</button>
-      </div>
+
     </div>
 
   )
