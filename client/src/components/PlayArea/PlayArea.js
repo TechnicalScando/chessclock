@@ -14,7 +14,7 @@ const PlayArea = ({ socket, settingsToggle, name }) => {
         setTimers(timers)
       })
     }
-  })
+  }, [socket, timers])
 
   // Linked to button in PlayArea, starts the currently selected timer
   const startTimer = () => {
@@ -31,6 +31,10 @@ const PlayArea = ({ socket, settingsToggle, name }) => {
     socket.emit('switchYield')
   }
 
+  const readyVote = () => {
+    socket.emit('vote')
+  }
+
   return (
     <div className='playareacontainer'>
       <div className='timerplayarea'>
@@ -41,11 +45,11 @@ const PlayArea = ({ socket, settingsToggle, name }) => {
             index={i}
             timer={timer}
             userName={name}
-
           />)}
       </div>
       <div className='buttoncontainer'>
-        <button className='timerbutton' onClick={startTimer}>Start</button>
+        {/* <button className='timerbutton' onClick={startTimer}>Start</button> */}
+        <button className='timerbutton' onClick={readyVote}>Ready</button>
         <button className='timerbutton' onClick={switchYield}>Switch/Yield</button>
         <button className='timerbutton' onClick={clearTimer}>Clear</button>
       </div>

@@ -31,3 +31,10 @@
    margin-bottom: 10px;
    align-self: flex-end; 
 }
+
+.voteimage {
+    height: 30px;
+    width: 30px;
+    margin-top: 6px;
+    
+}

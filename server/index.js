@@ -117,6 +117,7 @@ io.on('connect', (socket) => {
     const user = getUser(socket.id)
     if (user !== undefined) {
       timerManager.setUserOfTimer(timerIndex, user.name)
+
       io.to(user.room).emit('timer', { timers: timerManager.getTimers() })
     }
   })
@@ -139,6 +140,13 @@ io.on('connect', (socket) => {
         user: 'Admin',
         text: `${user.name} has left room: ${user.room} `
       })
+    }
+  })
+
+  socket.on('vote', () => {
+    const user = getUser(socket.id)
+    if (user !== undefined) {
+      io.to(user.room).emit('voteCast', user.name)
     }
   })
 })
