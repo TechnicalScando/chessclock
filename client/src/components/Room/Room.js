@@ -20,7 +20,6 @@ const Room = ({ location }) => {
   const ENDPOINT = 'localhost:5000'
 
   const [name, setName] = useState('')
-
   const [userCheck, setUserCheck] = useState(true)
 
   // This useEffect run when the endpoint, location.search, or usercheck changes
@@ -33,7 +32,6 @@ const Room = ({ location }) => {
     socket = io(ENDPOINT)
 
     // Send 'join' event with an object payload containing name and room
-    // If a user name is already taken run callbuck function with the error
     // If the username is already taken set the usercheck to false and return error page
     socket.emit('join', { name, room }, (error) => {
       if (error) {

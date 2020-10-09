@@ -13,9 +13,13 @@ class Timer {
   runTimer () {
     if (!this.isRunning) {
       this.timerInterval = setInterval(() => {
-        this.countdown--
-        this.isRunning = true
-        this.formatTimer()
+        if (this.countdown > 0) {
+          this.countdown--
+          this.isRunning = true
+          this.formatTimer()
+        } else {
+          this.stopTimer()
+        }
       }, 1000)
     }
   }
