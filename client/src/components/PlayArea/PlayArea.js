@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
 import Timer from '../Timer/Timer'
 
@@ -7,19 +7,16 @@ import './PlayArea.css'
 const PlayArea = ({ socket, settingsToggle, name }) => {
   const [timers, setTimers] = useState([])
 
-  useEffect(() => {
-    // Recieve timer event and update timers state
-    if (socket !== undefined) {
-      socket.on('timer', ({ timers }) => {
-        setTimers(timers)
-      })
-    }
-  }, [socket, timers])
+  if (socket !== undefined) {
+    socket.on('timer', ({ timers }) => {
+      setTimers(timers)
+    })
+  }
 
   // Linked to button in PlayArea, starts the currently selected timer
-  const startTimer = () => {
-    socket.emit('timerStart')
-  }
+  // const startTimer = () => {
+  //   socket.emit('timerStart')
+  // }
 
   // Linked to button in PlayArea, clears the currently selected timer
   const clearTimer = () => {

@@ -61,6 +61,8 @@ io.on('connect', (socket) => {
       text: `Welcome to room: ${user.room}, ${user.name}!`
     })
 
+    console.log(socket.eventNames())
+
     callback()
   })
 

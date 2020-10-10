@@ -11,6 +11,7 @@ const Settings = ({ socket }) => {
     if (socket !== undefined) {
       socket.emit('settings', { timerCount, timerCountdown })
     }
+    // eslint-disable-next-line
   }, [socket])
 
   const sendSettings = (event) => {
