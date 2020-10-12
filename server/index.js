@@ -61,8 +61,6 @@ io.on('connect', (socket) => {
       text: `Welcome to room: ${user.room}, ${user.name}!`
     })
 
-    console.log(socket.eventNames())
-
     callback()
   })
 
@@ -142,13 +140,6 @@ io.on('connect', (socket) => {
         user: 'Admin',
         text: `${user.name} has left room: ${user.room} `
       })
-    }
-  })
-
-  socket.on('vote', () => {
-    const user = getUser(socket.id)
-    if (user !== undefined) {
-      io.to(user.room).emit('voteCast', user.name)
     }
   })
 })
