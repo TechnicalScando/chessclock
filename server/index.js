@@ -127,6 +127,28 @@ io.on('connect', (socket) => {
     if (user !== undefined) {
       timerManager.setUserOfTimer(timerIndex, null)
       io.to(user.room).emit('timer', { timers: timerManager.getTimers() })
+      io.to(user.room).emit('unReadyVote', timerIndex)
+    }
+  })
+
+  socket.on('ready', (timerIndex) => {
+    const user = getUser(socket.id)
+    if (user !== undefined) {
+      io.to(user.room).emit('readyVote', timerIndex)
+    }
+  })
+
+  socket.on('unReady', (timerIndex) => {
+    const user = getUser(socket.id)
+    if (user !== undefined) {
+      io.to(user.room).emit('unReadyVote', timerIndex)
+    }
+  })
+
+  socket.on('initialVote', (timerIndex) => {
+    const user = getUser(socket.id)
+    if (user !== undefined) {
+      io.to(user.room).emit('initializeVote', timerIndex)
     }
   })
 

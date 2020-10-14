@@ -37,8 +37,6 @@ const Room = ({ location }) => {
       if (error) {
         setUserCheck(false)
       }
-
-      console.log('Room Use Effect Called')
     })
   }, [ENDPOINT, location.search, setUserCheck])
 

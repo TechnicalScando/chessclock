@@ -1,17 +1,38 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import Timer from '../Timer/Timer'
 
 import './PlayArea.css'
 
-const PlayArea = ({ socket, settingsToggle, name }) => {
+const PlayArea = ({ socket, name }) => {
   const [timers, setTimers] = useState([])
+  const [votes, setVotes] = useState([])
 
   if (socket !== undefined) {
     socket.on('timer', ({ timers }) => {
       setTimers(timers)
     })
   }
+
+  useEffect(() => {
+    if (socket !== undefined) {
+      socket.on('readyVote', (voteIndex) => {
+        readyVote(voteIndex, votes)
+      })
+
+      // socket.on('unReadyVote', (voteIndex) => {
+      //   unReadyVote(voteIndex, votes)
+      // })
+
+      socket.on('initializeVote', (voteIndex) => {
+        initializeVote(voteIndex, votes)
+      })
+    }
+  }, [socket])
+
+  useEffect(() => {
+    console.log(`votes: ${votes}`)
+  }, [votes])
 
   // Linked to button in PlayArea, starts the currently selected timer
   // const startTimer = () => {
@@ -28,8 +49,21 @@ const PlayArea = ({ socket, settingsToggle, name }) => {
     socket.emit('switchYield')
   }
 
-  const readyVote = () => {
-    socket.emit('vote')
+  const readyVote = (voteIndex, votes) => {
+    const newVotes = [...votes]
+    newVotes[voteIndex] = true
+  }
+
+  // const unReadyVote = (voteIndex, votes) => {
+  //   const newVotes = votes
+  //   newVotes.indexOf(voteIndex, false)
+  // }
+
+  const initializeVote = (voteIndex, votes) => {
+    const newVotes = [...votes]
+    newVotes.indexOf(voteIndex, false)
+    console.log(newVotes)
+    setVotes(newVotes)
   }
 
   return (
@@ -42,6 +76,7 @@ const PlayArea = ({ socket, settingsToggle, name }) => {
             index={i}
             timer={timer}
             userName={name}
+            votes={votes}
           />)}
       </div>
       <div className='buttoncontainer'>

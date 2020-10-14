@@ -38,3 +38,8 @@
     margin-top: 6px;
     
 }
+
+.readybutton {
+    align-self: flex-end;
+    margin-bottom: 10px;
+}
