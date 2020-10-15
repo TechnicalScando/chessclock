@@ -21,6 +21,8 @@ let timersetting // used for resetting timer to initial value
 app.use(router)
 app.use(cors)
 
+let voteRegister = []
+
 const emitTimersOnInterval = (interval, user) => {
   emitInterval = setInterval(() => {
     io.to(user.room).emit('timer', { timers: timerManager.getTimers() })
@@ -30,6 +32,15 @@ const emitTimersOnInterval = (interval, user) => {
 const generateAndEmitTimers = (timerCount, countdown, user) => {
   timerManager = new TimerManager(timerCount, countdown)
   io.to(user.room).emit('timer', { timers: timerManager.getTimers() })
+}
+
+const populateVoteRegistry = (length, user) => {
+  const newArr = []
+  for (let i = 0; i < length; i++) {
+    newArr.push(false)
+  }
+  voteRegister = newArr
+  io.to(user.room).emit('vote', { voteRegister })
 }
 
 // specific client instance of a socket with a unique socket id
@@ -110,6 +121,7 @@ io.on('connect', (socket) => {
     if (user !== undefined) {
       timersetting = timerCountdown
       generateAndEmitTimers(timerCount, timerCountdown, user)
+      populateVoteRegistry(timerCount, user)
     }
   })
 
@@ -126,29 +138,25 @@ io.on('connect', (socket) => {
     const user = getUser(socket.id)
     if (user !== undefined) {
       timerManager.setUserOfTimer(timerIndex, null)
+      voteRegister[timerIndex] = false
+      io.to(user.room).emit('vote', { voteRegister })
       io.to(user.room).emit('timer', { timers: timerManager.getTimers() })
-      io.to(user.room).emit('unReadyVote', timerIndex)
     }
   })
 
   socket.on('ready', (timerIndex) => {
     const user = getUser(socket.id)
     if (user !== undefined) {
-      io.to(user.room).emit('readyVote', timerIndex)
+      voteRegister[timerIndex] = true
+      io.to(user.room).emit('vote', { voteRegister })
     }
   })
 
   socket.on('unReady', (timerIndex) => {
     const user = getUser(socket.id)
     if (user !== undefined) {
-      io.to(user.room).emit('unReadyVote', timerIndex)
-    }
-  })
-
-  socket.on('initialVote', (timerIndex) => {
-    const user = getUser(socket.id)
-    if (user !== undefined) {
-      io.to(user.room).emit('initializeVote', timerIndex)
+      voteRegister[timerIndex] = false
+      io.to(user.room).emit('vote', { voteRegister })
     }
   })
 

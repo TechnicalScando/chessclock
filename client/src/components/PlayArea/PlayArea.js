@@ -16,28 +16,21 @@ const PlayArea = ({ socket, name }) => {
 
   useEffect(() => {
     if (socket !== undefined) {
-      socket.on('readyVote', (voteIndex) => {
-        readyVote(voteIndex, votes)
-      })
-
-      // socket.on('unReadyVote', (voteIndex) => {
-      //   unReadyVote(voteIndex, votes)
-      // })
-
-      socket.on('initializeVote', (voteIndex) => {
-        initializeVote(voteIndex, votes)
+      socket.on('vote', ({ voteRegister }) => {
+        if (voteRegister !== undefined) {
+          setVotes(voteRegister)
+        }
       })
     }
   }, [socket])
 
-  useEffect(() => {
-    console.log(`votes: ${votes}`)
-  }, [votes])
-
   // Linked to button in PlayArea, starts the currently selected timer
-  // const startTimer = () => {
-  //   socket.emit('timerStart')
-  // }
+  const startTimer = () => {
+    const voteCheck = votes.every(e => e === true)
+    if (voteCheck) {
+      socket.emit('timerStart')
+    }
+  }
 
   // Linked to button in PlayArea, clears the currently selected timer
   const clearTimer = () => {
@@ -47,23 +40,6 @@ const PlayArea = ({ socket, name }) => {
   // Linked to button in PlayArea, switches between players timers
   const switchYield = () => {
     socket.emit('switchYield')
-  }
-
-  const readyVote = (voteIndex, votes) => {
-    const newVotes = [...votes]
-    newVotes[voteIndex] = true
-  }
-
-  // const unReadyVote = (voteIndex, votes) => {
-  //   const newVotes = votes
-  //   newVotes.indexOf(voteIndex, false)
-  // }
-
-  const initializeVote = (voteIndex, votes) => {
-    const newVotes = [...votes]
-    newVotes.indexOf(voteIndex, false)
-    console.log(newVotes)
-    setVotes(newVotes)
   }
 
   return (
@@ -80,8 +56,7 @@ const PlayArea = ({ socket, name }) => {
           />)}
       </div>
       <div className='buttoncontainer'>
-        {/* <button className='timerbutton' onClick={startTimer}>Start</button> */}
-        <button className='timerbutton' onClick={readyVote}>Ready</button>
+        <button className='timerbutton' onClick={startTimer}>Start</button>
         <button className='timerbutton' onClick={switchYield}>Switch/Yield</button>
         <button className='timerbutton' onClick={clearTimer}>Clear</button>
       </div>

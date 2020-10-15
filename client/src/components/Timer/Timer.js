@@ -8,8 +8,10 @@ const Timer = ({ socket, timer, index, userName, votes }) => {
   const DEFAULTUSER = '---Join'
 
   let joinLeaveButton
+  let readyUnreadyButton
   let voteImage
   let hasJoined = false
+  const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
     socket.emit('initialVote', index)
@@ -20,14 +22,17 @@ const Timer = ({ socket, timer, index, userName, votes }) => {
   }
 
   const leaveTimer = () => {
+    setIsReady(false)
     socket.emit('leaveTimer', index)
   }
 
   const ready = () => {
+    setIsReady(true)
     socket.emit('ready', index)
   }
 
   const unReady = () => {
+    setIsReady(false)
     socket.emit('unReady', index)
   }
 
@@ -49,6 +54,13 @@ const Timer = ({ socket, timer, index, userName, votes }) => {
     joinLeaveButton = <button className='joinleavebutton' onClick={leaveTimer}>Leave</button>
   }
 
+  // set button to ready/undready
+  if (isReady) {
+    readyUnreadyButton = <button className='unreadybutton' onClick={unReady}>Unready</button>
+  } else {
+    readyUnreadyButton = <button className='readybutton' onClick={ready}>Ready</button>
+  }
+
   return (
     <div className='outertimerdiv'>
       <div className='userjoincontainer'>
@@ -57,7 +69,7 @@ const Timer = ({ socket, timer, index, userName, votes }) => {
         </h1>
         {voteImage}
         {joinLeaveButton}
-        {hasJoined && <button className='readybutton' onClick={ready}>Ready</button>}
+        {hasJoined && readyUnreadyButton}
       </div>
 
       <div className='timercontainer'>
