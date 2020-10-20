@@ -1,16 +1,17 @@
 const Timer = require('./Timer')
 
 class TimerManager {
-  constructor (timerCount, countdown) {
+  constructor (timerCount, countdown, callback) {
     this.timers = []
     this.selectedTimer = 0 // index of currently selected timer
+    this.callback = callback
     for (let i = 0; i < timerCount; i++) {
       this.timers[i] = new Timer(countdown)
     }
   }
 
   startSelectedTimer () {
-    this.timers[this.selectedTimer].runTimer()
+    this.timers[this.selectedTimer].runTimer(this.callback)
   }
 
   resetSelectedTimer (countdown) {
@@ -28,7 +29,7 @@ class TimerManager {
       this.selectedTimer = 0
     }
 
-    this.timers[this.selectedTimer].runTimer()
+    this.timers[this.selectedTimer].runTimer(this.callback)
   }
 
   getTimers () {

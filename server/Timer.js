@@ -1,3 +1,4 @@
+
 class Timer {
   constructor (countdown) {
     this.countdown = countdown
@@ -10,7 +11,7 @@ class Timer {
     this.formatTimer()
   }
 
-  runTimer () {
+  runTimer (callback) {
     if (!this.isRunning) {
       this.timerInterval = setInterval(() => {
         if (this.countdown > 0) {
@@ -19,6 +20,9 @@ class Timer {
           this.formatTimer()
         } else {
           this.stopTimer()
+          if (typeof callback === 'function') {
+            callback.call()
+          }
         }
       }, 1000)
     }

@@ -23,14 +23,18 @@ app.use(cors)
 
 let voteRegister = []
 
+const testCallBack = () => {
+  console.log('callback suceeded')
+}
+
 const emitTimersOnInterval = (interval, user) => {
   emitInterval = setInterval(() => {
     io.to(user.room).emit('timer', { timers: timerManager.getTimers() })
   }, interval)
 }
 
-const generateAndEmitTimers = (timerCount, countdown, user) => {
-  timerManager = new TimerManager(timerCount, countdown)
+const generateAndEmitTimers = (timerCount, countdown, user, callback) => {
+  timerManager = new TimerManager(timerCount, countdown, callback)
   io.to(user.room).emit('timer', { timers: timerManager.getTimers() })
 }
 
@@ -120,7 +124,7 @@ io.on('connect', (socket) => {
     const user = getUser(socket.id)
     if (user !== undefined) {
       timersetting = timerCountdown
-      generateAndEmitTimers(timerCount, timerCountdown, user)
+      generateAndEmitTimers(timerCount, timerCountdown, user, testCallBack)
       populateVoteRegistry(timerCount, user)
     }
   })

@@ -1,11 +1,15 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import nanoid from 'nanoid'
 
 import './Join.css'
 
 const Join = () => {
   const [name, setName] = useState('')
   const [room, setRoom] = useState('')
+
+  const id = nanoid()
+  console.log(id)
 
   return (
     <div className='joincontainer'>
