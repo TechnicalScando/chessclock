@@ -22,6 +22,12 @@ const PlayArea = ({ socket, name }) => {
         }
       })
     }
+
+    if (socket !== undefined) {
+      socket.on('zeroTimer', () => {
+        console.log('zero timer')
+      })
+    }
   }, [socket])
 
   // Linked to button in PlayArea, starts the currently selected timer

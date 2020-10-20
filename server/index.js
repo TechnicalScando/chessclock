@@ -23,10 +23,6 @@ app.use(cors)
 
 let voteRegister = []
 
-const testCallBack = () => {
-  console.log('callback suceeded')
-}
-
 const emitTimersOnInterval = (interval, user) => {
   emitInterval = setInterval(() => {
     io.to(user.room).emit('timer', { timers: timerManager.getTimers() })
@@ -78,6 +74,13 @@ io.on('connect', (socket) => {
 
     callback()
   })
+
+  const testCallBack = () => {
+    const user = getUser(socket.id)
+    if (user !== undefined) {
+      io.to(user.room).emit('zeroTimer')
+    }
+  }
 
   // Recieve the timerStart event from the client
   // begin running the currently selected timer
