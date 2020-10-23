@@ -18,6 +18,7 @@ const Timer = ({ socket, timer, index, userName, votes }) => {
   }, [socket])
 
   const joinTimer = () => {
+    setIsReady(false)
     socket.emit('joinTimer', index)
   }
 

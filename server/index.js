@@ -18,6 +18,8 @@ let timerManager
 let emitInterval
 let timersetting // used for resetting timer to initial value
 
+const DEFAULTEMITRATE = 1000
+
 app.use(router)
 app.use(cors)
 
@@ -75,7 +77,7 @@ io.on('connect', (socket) => {
     callback()
   })
 
-  const testCallBack = () => {
+  const zeroTimerCallBack = () => {
     const user = getUser(socket.id)
     if (user !== undefined) {
       io.to(user.room).emit('zeroTimer')
@@ -88,7 +90,7 @@ io.on('connect', (socket) => {
     const user = getUser(socket.id)
     if (user !== undefined) {
       timerManager.startSelectedTimer()
-      emitTimersOnInterval(1000, user)
+      emitTimersOnInterval(DEFAULTEMITRATE, user)
     }
   })
 
@@ -110,7 +112,7 @@ io.on('connect', (socket) => {
     if (user !== undefined) {
       clearInterval(emitInterval)
       timerManager.switchTimer()
-      emitTimersOnInterval(1000, user)
+      emitTimersOnInterval(DEFAULTEMITRATE, user)
     }
   })
 
@@ -127,7 +129,7 @@ io.on('connect', (socket) => {
     const user = getUser(socket.id)
     if (user !== undefined) {
       timersetting = timerCountdown
-      generateAndEmitTimers(timerCount, timerCountdown, user, testCallBack)
+      generateAndEmitTimers(timerCount, timerCountdown, user, zeroTimerCallBack)
       populateVoteRegistry(timerCount, user)
     }
   })
